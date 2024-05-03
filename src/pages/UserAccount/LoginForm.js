@@ -53,7 +53,7 @@ function LoginForm() {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await fetch('서버 API' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password));
+            const response = await fetch('서버 API?email=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password));
             const data = await response.json();
             if (data.length > 0) {
                 setUserInfo(data[0]);
