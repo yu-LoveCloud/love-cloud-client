@@ -1,10 +1,10 @@
 import React from 'react';
-import NavigationBar from './components/NavigationBar';
+import LoginForm from './pages/UserAccount/LoginForm';
 
 function App() {
     return (
         <div>
-            <NavigationBar />
+            <LoginForm />
         </div>
     );
 }

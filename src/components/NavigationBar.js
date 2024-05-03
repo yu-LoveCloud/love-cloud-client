@@ -14,7 +14,8 @@ const NavBar = styled.nav`
 
 const Logo = styled.h1`
     font-size: 1.5em;
-    color: #333;
+    color: #4C3073;
+    font-size : small;
 `;
 
 const IconButton = styled.button`
@@ -29,7 +30,7 @@ function NavigationBar() {
         <IconButton>
           <MenuIcon />
         </IconButton>
-        <Logo>LOVE CLOUD</Logo>
+        <Logo><h1> LOVE CLOUD </h1></Logo>
         <IconButton>
           <MypageIcon />
         </IconButton>
