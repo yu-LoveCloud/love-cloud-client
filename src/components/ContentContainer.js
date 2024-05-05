@@ -8,6 +8,7 @@ const ContentContainer = styled.div`
   padding-bottom: 24px;
   min-height: calc(100vh - 70.53px - 48px);
   color: #111111;
+  position: relative;
 `;
 
 export default ContentContainer;

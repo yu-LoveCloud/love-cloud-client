@@ -4,8 +4,14 @@ import NavigationBar from "../../components/Nav/NavigationBar";
 import { Subtitle, Title } from "../../components/Typography";
 import InvitationCard from "../../components/invitation/InvitationCard";
 import PurpleButton from "../../components/button/PurpleButton";
+import { useNavigate } from "react-router-dom";
 
 function InvitationDashboard() {
+  const navigate = useNavigate();
+
+  const handleCreateInvitation = () => {
+    navigate("/invitation/create"); // '/create' 경로로 이동
+  };
   return (
     <AppContainer>
       <NavigationBar />
@@ -20,7 +26,9 @@ function InvitationDashboard() {
           }
           popUp={true}
         ></InvitationCard>
-        <PurpleButton>청첩장 생성하기</PurpleButton>
+        <PurpleButton onClick={handleCreateInvitation}>
+          청첩장 생성하기
+        </PurpleButton>
       </ContentContainer>
     </AppContainer>
   );

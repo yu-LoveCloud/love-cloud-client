@@ -22,3 +22,58 @@ export const Paragraph = styled.p`
   margin-top: 0;
   margin-bottom: 20px;
 `;
+
+//OrderedList
+export const OrderedListContainer = styled.ol`
+  list-style: none;
+  counter-reset: item;
+  padding-left: 0;
+`;
+
+export const ListItem = styled.li`
+  counter-increment: item;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  font-family: "Pretendard";
+  font-size: 16px;
+  color: #111111;
+  letter-spacing: calc(16px * -0.01);
+
+  &::before {
+    content: counter(item);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background-color: #4c3073;
+    color: white;
+    font-family: "Pretendard";
+    font-size: 16px;
+
+    margin-right: 10px;
+  }
+
+  /* 내용 스타일 */
+  font-size: 16px;
+`;
+
+export const Input = styled.input`
+  width: calc(100% - 24px);
+  height: 36px;
+  background-color: #f2f2f2;
+  border: none;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  color: #898989;
+  padding: 0 12px;
+  font-size: 12px;
+  font-family: "Pretendard";
+`;
+export const TextArea = styled(Input).attrs({ as: "textarea" })`
+  height: 200px; /* textarea에 맞는 크기 */
+  resize: none; /* 크기 조절 비활성화 */
+  padding: 12px; /* padding 추가 */
+`;
