@@ -1,13 +1,12 @@
 import AppContainer from "../components/AppContainer";
-import PurpleButton from "../components/button/PurpleButton";
-import WhiteButton from "../components/button/WhiteButton";
+import { Link } from 'react-router-dom';
 
 function Home() {
   return (
     <AppContainer>
-      <PurpleButton>완료</PurpleButton>
-      <WhiteButton>취소</WhiteButton>
-      안녕안녕
+      <h4> LOVE CLOUD </h4>
+      <Link to="/loginform">로그인</Link> <br />
+      <Link to="/signup">회원가입</Link> <br />
     </AppContainer>
   );
 }
