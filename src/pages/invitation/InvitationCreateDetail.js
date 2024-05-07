@@ -23,7 +23,7 @@ function InvitationCreateDetail() {
   useEffect(() => {
     if (!selectedImage) {
       alert("잘못된 접근입니다.");
-      navigate("/");
+      navigate("/Invitations");
     }
   }, [selectedImage, navigate]);
 
