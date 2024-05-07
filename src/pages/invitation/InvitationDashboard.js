@@ -10,7 +10,7 @@ function InvitationDashboard() {
   const navigate = useNavigate();
 
   const handleCreateInvitation = () => {
-    navigate("/invitation/create"); // '/create' 경로로 이동
+    navigate("/invitations/create-process1"); // '/create' 경로로 이동
   };
   return (
     <AppContainer>

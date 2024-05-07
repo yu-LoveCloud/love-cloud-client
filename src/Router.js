@@ -12,10 +12,13 @@ function Router() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/invitation" element={<InvitationDashboard />} />
-          <Route path="/invitation/create" element={<InvitationCreate />} />
+          <Route path="/invitations" element={<InvitationDashboard />} />
           <Route
-            path="/invitation/create_detail"
+            path="/invitations/create-process1"
+            element={<InvitationCreate />}
+          />
+          <Route
+            path="/invitations/create-process2"
             element={<InvitationCreateDetail />}
           />
         </Routes>

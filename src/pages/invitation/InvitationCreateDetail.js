@@ -27,6 +27,20 @@ function InvitationCreateDetail() {
     }
   }, [selectedImage, navigate]);
 
+  const handleCreateInvitation = () => {
+    if (!weddingDateTime || !place || !content) {
+      alert("모든 필드를 작성해주세요.");
+      return;
+    }
+
+    /**
+     * 여기서 청첩장을 생성하는 API를 호출합니다.
+     * 작성자: 염동환
+     *
+     */
+    alert("청첩장이 생성되었습니다.");
+    navigate("/invitations");
+  };
   return (
     <AppContainer>
       <NavigationBar />
@@ -56,7 +70,7 @@ function InvitationCreateDetail() {
             placeholder="전달할 말을 입력해주세요."
           ></TextArea>
 
-          <PurpleButton>생성하기</PurpleButton>
+          <PurpleButton onClick={handleCreateInvitation}>생성하기</PurpleButton>
         </OrderedListContainer>
       </ContentContainer>
     </AppContainer>

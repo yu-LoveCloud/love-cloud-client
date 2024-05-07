@@ -43,17 +43,11 @@ function InvitationCreate() {
     const fetchData = async () => {
       const imagedatas = [
         { id: 1, url: "https://via.placeholder.com/48" },
-
         { id: 2, url: "https://via.placeholder.com/84" },
-
         { id: 3, url: "https://via.placeholder.com/48" },
-
         { id: 4, url: "https://via.placeholder.com/48" },
-
         { id: 5, url: "https://via.placeholder.com/48" },
-
         { id: 6, url: "https://via.placeholder.com/48" },
-
         { id: 7, url: "https://via.placeholder.com/48" },
         // 필요한 만큼 이미지 URL 추가
       ];
@@ -94,7 +88,7 @@ function InvitationCreate() {
 
   const handleNextClick = () => {
     if (selectedImage) {
-      navigate("/invitation/create_detail", { state: { selectedImage } });
+      navigate("/invitations/create-process2", { state: { selectedImage } });
     } else {
       alert("이미지를 선택해 주세요.");
     }

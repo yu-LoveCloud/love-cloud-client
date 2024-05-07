@@ -1,7 +1,8 @@
 import styled from "styled-components";
 
+//345px -> 400변경
 const ContentContainer = styled.div`
-  max-width: 345px;
+  max-width: 400px;
   padding-left: 24px;
   padding-right: 24px;
   padding-top: 24px;
