@@ -7,6 +7,12 @@ const InvitationCard = styled.div`
   box-shadow: 0 16px 24px 0 rgba(180, 154, 217, 0.1);
   margin-bottom: 24px;
   position: relative;
+
+  ${(props) =>
+    !props.hasImage &&
+    `
+  border: 2.5px dashed #CCCCCC;
+`}// 이미지가 없을 때의 스타일
 `;
 
 const Image = styled.img`
@@ -64,8 +70,8 @@ const TextWrapper = styled.div`
 `;
 export default function InvitationCardComponent({ src, popUp = false }) {
   return (
-    <InvitationCard>
-      <Image src={src} alt="Invitation Card Image" />
+    <InvitationCard hasImage={!!src}>
+      {src && <Image src={src} alt="Invitation Card Image" />}
       {popUp && (
         <PopUp>
           <TextWrapper>최종 수정 날짜: 00.02.21</TextWrapper>
