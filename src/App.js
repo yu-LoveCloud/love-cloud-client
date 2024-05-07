@@ -1,12 +1,15 @@
-import React from 'react';
-import NavigationBar from './components/NavigationBar';
+import React from "react";
+import { BrowserRouter } from "react-router-dom";
+import GlobalStyle from "./styles/GlobalStyle";
+import Router from "./Router";
 
 function App() {
-    return (
-        <div>
-            <NavigationBar />
-        </div>
-    );
+  return (
+    <BrowserRouter>
+      <GlobalStyle />
+      <Router />
+    </BrowserRouter>
+  );
 }
 
 export default App;
