@@ -1,12 +1,15 @@
-import React from 'react';
-import LoginForm from './pages/UserAccount/LoginForm';
+import React from "react";
+import { BrowserRouter } from "react-router-dom";
+import GlobalStyle from "./styles/GlobalStyle";
+import Router from "./Router";
 
 function App() {
-    return (
-        <div>
-            <LoginForm />
-        </div>
-    );
+  return (
+    <BrowserRouter>
+      <GlobalStyle />
+      <Router />
+    </BrowserRouter>
+  );
 }
 
 export default App;

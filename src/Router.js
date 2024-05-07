@@ -1,19 +1,18 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
-import App from "./App";
-import GlobalStyle from "./styles/GlobalStyle";
+import InvitationDashboard from "./pages/invitation/InvitationDashboard";
+import LoginForm from "./pages/UserAccount/LoginForm";
+import SignUp from "./pages/UserAccount/SignUp";
+
 
 function Router() {
   return (
-    <>
-      <GlobalStyle />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/home" element={<Home />} />
-        </Routes>
-      </BrowserRouter>
-    </>
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/invitation" element={<InvitationDashboard />} />
+      <Route path="/loginform" element={<LoginForm />} />
+      <Route path="/signup" element={<SignUp />} />
+    </Routes>
   );
 }
 

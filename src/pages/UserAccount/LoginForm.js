@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import styled from "styled-components";
 import AppContainer from "../../components/AppContainer";
 import NavigationBar from '../../components/NavigationBar';
@@ -11,24 +12,36 @@ const Title = styled.h2`
 
 const Input = styled.input`
   width: 100%;
+  height : 27px;
   font-size: 16px;
   border-radius: 10px;
+  background-color : #F2F2F2;
+  border : 0;
 `;
 
-const Button = styled.button`
-  padding: 10px 20px;
-  height: 56px;
+const LoginButton = styled.button`
+  background-color: #4c3073;
   width: 100%;
-  border-radius: 10px;
-  background-color: #4C3073;
-  color: #ffffff;
-  margin-top: 20px;
+  height: 56px;
+  border: 0px;
+  border-radius: 12px;
+  box-shadow: #d9d9d9 0 4px 4px;
+  color: white; /* 글자 색상 설정 */
+  font-size: 16px; /* 글자 크기 설정 */
+  text-align: center;
+  cursor: pointer; /* 커서 설정 */
+  font-family: "Pretendard";
+  transition: transform 0.3s, box-shadow 0.3s; /* 애니메이션 적용 */
+
+  &:hover {
+    transform: translateY(-1px); /* 살짝 위로 이동 */
+    box-shadow: #d9d9d9 0 5px 5px; /* 그림자 변경 */
+  }
 `;
 
-const UserInfoDisplay = styled.div`
-  margin-top: 20px;
-  color: #4C3073;
-  font-size: 16px;
+const LoginButtonWrapper = styled.div`
+  padding-top: 0px;
+  padding-bottom: 0px;
 `;
 
 const ErrorMessage = styled.p`
@@ -36,10 +49,20 @@ const ErrorMessage = styled.p`
   margin-top: 20px;
 `;
 
-function LoginForm() {
+const SnsImg = styled.img`
+  width : 64px;
+  height : 64px;
+`;
+
+const SnsButton = styled.button`
+  background : none;
+  border : none;
+  padding : 0;
+`;
+
+function LoginForm({ children, onClick }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [userInfo, setUserInfo] = useState({});
     const [error, setError] = useState('');
 
     const handleEmailChange = (event) => {
@@ -56,11 +79,9 @@ function LoginForm() {
             const response = await fetch('서버 API?email=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password));
             const data = await response.json();
             if (data.length > 0) {
-                setUserInfo(data[0]);
                 setError('');
             } else {
                 setError('이메일 또는 비밀번호가 일치하지 않습니다.');
-                setUserInfo({});
             }
         } catch (error) {
             console.error('Error during login:', error);
@@ -106,21 +127,24 @@ function LoginForm() {
                        style={{ marginBottom: '20px' }}
                    />
                </div>
-               <Button type="submit">로그인</Button>
+               <LoginButtonWrapper>
+                    <LoginButton onClick={onClick}>{children}로그인</LoginButton>
+                </LoginButtonWrapper>
                {error && <ErrorMessage>{error}</ErrorMessage>}
                <div style ={{ fontSize : 'small' , display : 'flex', justifyContent : 'space-between' }}>
-                <h4 style = {{ width : '150px'}}>비밀번호를 잊어버리셨나요?</h4> <h4 style = {{ width : '50px'}}>회원가입</h4>
+                <h4 style = {{ width : '150px'}}>비밀번호를 잊어버리셨나요?</h4>
+                <h4 style = {{ width : '50px'}}> <Link to="/signup" style = {{ textDecoration : 'none' , color : 'inherit' }}>회원가입</Link></h4>
                </div>
                <div style ={{ display : 'flex' , justifyContent : 'space-between' }}>
-                <button onClick={handleGoogleLogin} style = {{ background : 'none' , border : 'none' , padding : '0' }}>
-                    <img style = {{ width : '64px' , height : '64px' }} src='/images/GoogleLogin.jpg' />
-                </button>
-                <button onClick={handleKakaoLogin} style = {{ background : 'none' , border : 'none', padding : '0' }}>
-                    <img style = {{ width : '64px' , height : '64px' }} src='/images/KakaoLogin.jpg' />
-                </button>
-                <button onClick={handleNaverLogin} style = {{ background : 'none' , border : 'none', padding : '0' }}>
-                    <img style = {{ width : '64px' , height : '64px' }} src='/images/NaverLogin.jpg' />
-                </button>
+                <SnsButton onClick={handleGoogleLogin}>
+                    <SnsImg src='/images/GoogleLogin.jpg' alt='' />
+                </SnsButton>
+                <SnsButton onClick={handleKakaoLogin}>
+                    <SnsImg src='/images/KakaoLogin.jpg' alt='' />
+                </SnsButton>
+                <SnsButton onClick={handleNaverLogin}>
+                    <SnsImg src='/images/NaverLogin.jpg' alt='' />
+                </SnsButton>
                </div>
            </AppContainer>
        </form>
@@ -129,4 +153,3 @@ function LoginForm() {
 }
 
 export default LoginForm;
-
