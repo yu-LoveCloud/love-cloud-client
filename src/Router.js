@@ -10,7 +10,6 @@ function Router() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/invitation" element={<InvitationDashboard />} />
       <Route path="/loginform" element={<LoginForm />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/invitations" element={<InvitationDashboard />} />
