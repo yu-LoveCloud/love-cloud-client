@@ -29,7 +29,7 @@ const ImageButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
 `;
-function InvitationCreate() {
+function InvitationCreateProcess1() {
   const [images, setImages] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const selectBarRef = useRef(null);
@@ -123,4 +123,4 @@ function InvitationCreate() {
   );
 }
 
-export default InvitationCreate;
+export default InvitationCreateProcess1;

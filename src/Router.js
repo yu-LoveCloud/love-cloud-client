@@ -3,8 +3,8 @@ import Home from "./pages/Home";
 import InvitationDashboard from "./pages/invitation/InvitationDashboard";
 import LoginForm from "./pages/UserAccount/LoginForm";
 import SignUp from "./pages/UserAccount/SignUp";
-import InvitationCreate from "./pages/invitation/InvitationCreate";
-import InvitationCreateDetail from "./pages/invitation/InvitationCreateDetail";
+import InvitationCreateProcess1 from "./pages/invitation/InvitationCreateProcess1";
+import InvitationCreateProcess2 from "./pages/invitation/InvitationCreateProcess2";
 
 function Router() {
   return (
@@ -16,11 +16,11 @@ function Router() {
       <Route path="/invitations" element={<InvitationDashboard />} />
       <Route
         path="/invitations/create-process1"
-        element={<InvitationCreate />}
+        element={<InvitationCreateProcess1 />}
       />
       <Route
         path="/invitations/create-process2"
-        element={<InvitationCreateDetail />}
+        element={<InvitationCreateProcess2 />}
       />
     </Routes>
   );

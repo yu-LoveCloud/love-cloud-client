@@ -13,7 +13,7 @@ import {
 import { useEffect, useState } from "react";
 import PurpleButton from "../../components/button/PurpleButton";
 
-function InvitationCreateDetail() {
+function InvitationCreateProcess2() {
   const location = useLocation();
   const navigate = useNavigate();
   const { selectedImage } = location.state || {};
@@ -23,7 +23,7 @@ function InvitationCreateDetail() {
   useEffect(() => {
     if (!selectedImage) {
       alert("잘못된 접근입니다.");
-      navigate("/Invitations");
+      navigate("/invitations");
     }
   }, [selectedImage, navigate]);
 
@@ -77,4 +77,4 @@ function InvitationCreateDetail() {
   );
 }
 
-export default InvitationCreateDetail;
+export default InvitationCreateProcess2;
