@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from "styled-components";
 import AppContainer from "../../components/AppContainer";
-import NavigationBar from '../../components/NavigationBar';
+import NavigationBar from '../../components/Nav/NavigationBar';
+import ContentContainer from '../../components/ContentContainer';
 
 const Title = styled.h2`
   color: #4C3073;
@@ -76,7 +77,7 @@ function LoginForm({ children, onClick }) {
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await fetch('서버 API?email=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password));
+            const response = await fetch('http://localhost:3000/users?email=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password));
             const data = await response.json();
             if (data.length > 0) {
                 setError('');
@@ -107,10 +108,10 @@ function LoginForm({ children, onClick }) {
     };
 
     return (
-       <>
-       <NavigationBar />
-       <form onSubmit={handleSubmit}>
-       <AppContainer>
+        <AppContainer>
+        <NavigationBar />
+        <ContentContainer>
+        <form onSubmit={handleSubmit}>
                <div style={{ width: '100%', textAlign: 'center' }}>
                    <Title>LOVE CLOUD</Title>
                </div>
@@ -128,11 +129,13 @@ function LoginForm({ children, onClick }) {
                    />
                </div>
                <LoginButtonWrapper>
-                    <LoginButton onClick={onClick}>{children}로그인</LoginButton>
+               <Link to="/" style = {{ color: 'inherit' , textDecoration : 'none' }}>
+                  <LoginButton onClick={onClick}>{children}로그인</LoginButton>
+                </ Link>
                 </LoginButtonWrapper>
                {error && <ErrorMessage>{error}</ErrorMessage>}
                <div style ={{ fontSize : 'small' , display : 'flex', justifyContent : 'space-between' }}>
-                <h4 style = {{ width : '150px'}}>비밀번호를 잊어버리셨나요?</h4>
+                <h4 style = {{ width : '150px'}}><Link to="/changepassword" style = {{ textDecoration : 'none' , color : 'inherit' }}>비밀번호를 잊어버리셨나요?</Link></h4>
                 <h4 style = {{ width : '50px'}}> <Link to="/signup" style = {{ textDecoration : 'none' , color : 'inherit' }}>회원가입</Link></h4>
                </div>
                <div style ={{ display : 'flex' , justifyContent : 'space-between' }}>
@@ -140,15 +143,16 @@ function LoginForm({ children, onClick }) {
                     <SnsImg src='/images/GoogleLogin.jpg' alt='' />
                 </SnsButton>
                 <SnsButton onClick={handleKakaoLogin}>
-                    <SnsImg src='/images/KakaoLogin.jpg' alt='' />
+                    <SnsImg src='/images/KakaoLogin.png' alt='' />
                 </SnsButton>
                 <SnsButton onClick={handleNaverLogin}>
-                    <SnsImg src='/images/NaverLogin.jpg' alt='' />
+                    <SnsImg src='/images/NaverLogin.png' alt='' />
                 </SnsButton>
                </div>
-           </AppContainer>
        </form>
-       </>
+        </ContentContainer>
+      </AppContainer>
+       
     );
 }
 
