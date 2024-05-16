@@ -103,7 +103,6 @@ const ConnectCode = () => {
             <InputWrapper>
               <Input
                 type="text"
-                placeholder="코드를 입력하세요"
                 ref={inputRef}
                 onBlur={handleBlur}
                 value={inputValue}
