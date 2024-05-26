@@ -31,6 +31,7 @@ const CheckInput = styled.input`
 function SignUp() {
     const [email, setEmail] = useState('');
     const [name, setName] = useState('');
+    const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
     const [isChecked1, setIsChecked1] = useState(false);
     const [isChecked2, setIsChecked2] = useState(false);
@@ -50,6 +51,7 @@ function SignUp() {
                 body: JSON.stringify({
                     email,
                     name,
+                    phone,
                     password,
                     role1: isChecked1 ? '신랑' : '', // 체크박스1 정보 저장
                     role2: isChecked2 ? '신부' : ''  // 체크박스2 정보 저장
@@ -78,6 +80,8 @@ function SignUp() {
                 <Input value={email} onChange={e => handleInputChange(e, setEmail)} />
                 <h4 style={{ marginTop: '20px', marginBottom: '4px' }}>이름</h4>
                 <Input value={name} onChange={e => handleInputChange(e, setName)} />
+                <h4 style={{ marginTop: '20px', marginBottom: '4px' }}>전화번호</h4>
+                <Input value={phone} onChange={e => handleInputChange(e, setPhone)}/>
                 <h4 style={{ marginTop: '20px', marginBottom: '4px' }}>비밀번호</h4>
                 <Input value={password} onChange={e => handleInputChange(e, setPassword)} />
                 <h4 style={{ marginTop: '20px', marginBottom: '4px' }}>비밀번호 확인</h4>

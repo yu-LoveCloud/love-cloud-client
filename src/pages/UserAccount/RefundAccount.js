@@ -82,9 +82,10 @@ function RefundAccount() {
         <NavigationBar />
         <ContentContainer as="form" onSubmit={handleSubmit}>
             <Title>환불 계좌 등록</ Title>
-            <h4 style={{ marginTop: '50px', marginBottom: '4px' }}>은행명</h4>
+            <p>환불 계좌 정보</p>
+            <h4 style={{ marginBottom: '4px' }}>은행명</h4>
             <BankSelect value={bank} onChange={handleBankChange}>
-                <option bank="">은행명</option> // 일단 이정도만 넣어두고 나중에 추가 예정
+                {<option bank="">은행명</option>} {/* 일단 이정도만 넣어두고 나중에 추가 예정 */}
                 <option bank="NH">NH농협</option>
                 <option bank="KAKAO">카카오뱅크</option>
                 <option bank="KB">KB국민</option>
