@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
+import axios from 'axios';
 import AppContainer from "../../components/AppContainer";
 import NavigationBar from "../../components/Nav/NavigationBar";
 import ContentContainer from "../../components/ContentContainer";
@@ -134,161 +135,104 @@ const ProductPrice = styled.p`
     font-family: "Pretendard"; // 글꼴 설정
 `;
 
-// 더미 데이터 정의
-const initialProducts = [
-    {
-        productId: 1, // 제품 ID
-        productName: 'BESPOKE 냉장고 4도어 902L', // 제품 이름
-        modelName: 'RF90DG9111S9', // 모델명
-        price: '1,890,000원', // 가격
-        imageUrl: 'https://via.placeholder.com/200', // 이미지 URL
-        colors: ['#FFFFFF', '#000000', '#FF0000'], // 색상 옵션
-        isWishlisted: false // 찜 상태
-    },
-    {
-        productId: 2,
-        productName: 'BESPOKE AI 하이브리드 900L',
-        modelName: 'RF91DB90LE01',
-        price: '3,240,000원',
-        imageUrl: 'https://via.placeholder.com/200',
-        colors: ['#FFFFFF', '#000000'],
-        isWishlisted: true
-    },
-    {
-        productId: 3,
-        productName: 'BESPOKE 냉장고 4도어 811L',
-        modelName: 'RF80DB9342H6',
-        price: '3,470,000원',
-        imageUrl: 'https://via.placeholder.com/200',
-        colors: ['#FFFFFF', '#000000', '#00FF00'],
-        isWishlisted: false
-    },
-    {
-        productId: 4,
-        productName: 'BESPOKE 정수기 냉장고 4도어 825L',
-        modelName: 'RF85C98Y2AP',
-        price: '3,925,000원',
-        imageUrl: 'https://via.placeholder.com/200',
-        colors: ['#FFFFFF', '#000000', '#0000FF'],
-        isWishlisted: true
-    },
-];
-
 const ProductList = () => {
-    const [products, setProducts] = useState(initialProducts); // 초기 제품 상태 설정
-    const [selectedCategory, setSelectedCategory] = useState('전체'); // 선택된 카테고리를 관리하는 상태
-    const [sortOrder, setSortOrder] = useState('등록일순'); // 정렬 순서를 관리하는 상태
-    const [selectedColor, setSelectedColor] = useState(null); // 선택된 색상 상태
-    const filterContainerRef = useRef(null); // FilterContainer에 대한 참조 생성
-    const colorOptionsRef = useRef(null); // ColorOptions에 대한 참조 생성
-    let isMouseDown = false; // 마우스 버튼이 눌린 상태를 추적
-    let startX, scrollLeft; // 드래그 시작 위치와 스크롤 위치를 저장
+    const [products, setProducts] = useState([]); // 제품 목록 상태 선언
+    const [categories, setCategories] = useState([]); // 카테고리 목록 상태 선언
+    const [selectedCategory, setSelectedCategory] = useState(null); // 선택된 카테고리 상태 선언
+    const [sortOrder, setSortOrder] = useState('등록일순'); // 정렬 순서 상태 선언
+    const [selectedColors, setSelectedColors] = useState({}); // 선택된 색상 상태 선언
 
-    const handleMouseDown = (e, ref) => {
-        isMouseDown = true; // 마우스 버튼이 눌린 상태로 설정
-        ref.current.style.cursor = 'grabbing'; // 커서 모양 변경
-        startX = e.pageX - ref.current.offsetLeft; // 드래그 시작 위치 계산
-        scrollLeft = ref.current.scrollLeft; // 현재 스크롤 위치 저장
+    useEffect(() => {
+        const fetchCategories = async () => { // 카테고리를 가져오는 함수 선언
+            try {
+                const response = await axios.get('http://localhost:8080/categories'); // API 요청하여 카테고리 데이터 가져오기
+                setCategories(response.data); // 카테고리 상태 업데이트
+            } catch (error) {
+                console.error('카테고리 가져올 때 에러 발생:', error); // 에러 발생 시 콘솔에 에러 메시지 출력
+            }
+        };
+        fetchCategories(); // 컴포넌트가 마운트될 때 카테고리를 가져오는 함수 호출
+    }, []); // 의존성 배열이 비어있어 컴포넌트 마운트 시 한 번만 실행
+
+    useEffect(() => {
+        const fetchProducts = async () => { // 제품을 가져오는 함수 선언
+            try {
+                const endpoint = selectedCategory ?
+                    `http://localhost:8080/products?categoryId=${selectedCategory}` :
+                    'http://localhost:8080/products'; // 선택된 카테고리에 따라 엔드포인트 설정
+                const response = await axios.get(endpoint); // API 요청하여 제품 데이터 가져오기
+                setProducts(response.data.filter(product => product)); // 제품 상태 업데이트, null 값 필터링
+            } catch (error) {
+                console.error('Error fetching products:', error); // 에러 발생 시 콘솔에 에러 메시지 출력
+            }
+        };
+        fetchProducts(); // 선택된 카테고리가 변경될 때마다 제품을 가져오는 함수 호출
+    }, [selectedCategory]); // 의존성 배열에 selectedCategory 포함하여 선택된 카테고리 변경 시마다 실행
+
+    const handleCategoryChange = (categoryId) => { // 카테고리 변경 핸들러 함수
+        setSelectedCategory(categoryId); // 선택된 카테고리 상태 업데이트
     };
 
-    const handleMouseLeave = (ref) => {
-        isMouseDown = false; // 마우스 버튼이 눌린 상태 해제
-        ref.current.style.cursor = 'grab'; // 커서 모양 변경
+    const handleSortOrderChange = (event) => { // 정렬 순서 변경 핸들러 함수
+        setSortOrder(event.target.value); // 정렬 순서 상태 업데이트
     };
 
-    const handleMouseUp = (ref) => {
-        isMouseDown = false; // 마우스 버튼이 눌린 상태 해제
-        ref.current.style.cursor = 'grab'; // 커서 모양 변경
+    const handleColorChange = (productId, optionId) => { // 색상 변경 핸들러 함수
+        setSelectedColors(prev => ({
+            ...prev,
+            [productId]: optionId // 선택된 색상 상태 업데이트
+        }));
     };
 
-    const handleMouseMove = (e, ref) => {
-        if (!isMouseDown) return; // 마우스 버튼이 눌리지 않았으면 종료
-        e.preventDefault(); // 기본 동작 방지
-        const x = e.pageX - ref.current.offsetLeft; // 현재 마우스 위치 계산
-        const walk = (x - startX) * 2; // 드래그 거리 계산 및 속도 조절
-        ref.current.scrollLeft = scrollLeft - walk; // 스크롤 위치 조정
-    };
-
-    const handleCategoryChange = (category) => {
-        setSelectedCategory(category); // 선택된 카테고리 상태 변경
-    };
-
-    const handleSortOrderChange = (e) => {
-        setSortOrder(e.target.value); // 정렬 순서 상태 변경
-    };
-
-    const toggleWishlist = (productId) => {
-        // 찜 상태 토글
-        const updatedProducts = products.map(product =>
-            product.productId === productId
-                ? { ...product, isWishlisted: !product.isWishlisted }
-                : product
-        );
-        setProducts(updatedProducts);
-    };
-
-    const handleColorChange = (color) => {
-        setSelectedColor(color === selectedColor ? null : color); // 선택된 색상 상태 변경
-    };
-
-    const filteredProducts = selectedColor
-        ? products.filter(product => product.colors.includes(selectedColor))
-        : products;
+    // 선택된 카테고리 이름 가져오기
+    const selectedCategoryName = selectedCategory
+        ? categories.find(category => category.categoryId === selectedCategory)?.categoryName
+        : '전체';
 
     return (
-        <AppContainer>
-            <NavigationBar />
-            <ContentContainer>
-                <Title>냉장고</Title>
-                <FilterContainer
-                    ref={filterContainerRef}
-                    onMouseDown={(e) => handleMouseDown(e, filterContainerRef)}
-                    onMouseLeave={() => handleMouseLeave(filterContainerRef)}
-                    onMouseUp={() => handleMouseUp(filterContainerRef)}
-                    onMouseMove={(e) => handleMouseMove(e, filterContainerRef)}
-                >
-                    <FilterButton active={selectedCategory === '전체'} onClick={() => handleCategoryChange('전체')}>전체</FilterButton>
-                    <FilterButton active={selectedCategory === 'TV'} onClick={() => handleCategoryChange('TV')}>TV</FilterButton>
-                    <FilterButton active={selectedCategory === '냉장고'} onClick={() => handleCategoryChange('냉장고')}>냉장고</FilterButton>
-                    <FilterButton active={selectedCategory === '김치냉장고'} onClick={() => handleCategoryChange('김치냉장고')}>김치냉장고</FilterButton>
-                    <FilterButton active={selectedCategory === '식기세척기'} onClick={() => handleCategoryChange('식기세척기')}>식기세척기</FilterButton>
-                </FilterContainer>
-                <SortSelectContainer>
-                    <SortSelect value={sortOrder} onChange={handleSortOrderChange}>
-                        <option value="등록일순">등록일순</option>
-                        <option value="가격순">가격순</option>
-                    </SortSelect> {/* 정렬 셀렉트 박스 추가 */}
-                </SortSelectContainer>
-                <ProductGrid>
-                    {filteredProducts.map(product => (
-                        <ProductCard key={product.productId}>
-                            <ProductImage src={product.imageUrl} alt={product.productName} />
-                            <WishlistButton onClick={() => toggleWishlist(product.productId)}>
-                                <img src={product.isWishlisted ? SelectedHeart : UnselectedHeart} alt="찜" />
-                            </WishlistButton>
-                            <ProductInfo>
-                                <ColorOptions
-                                    ref={colorOptionsRef}
-                                    onMouseDown={(e) => handleMouseDown(e, colorOptionsRef)}
-                                    onMouseLeave={() => handleMouseLeave(colorOptionsRef)}
-                                    onMouseUp={() => handleMouseUp(colorOptionsRef)}
-                                    onMouseMove={(e) => handleMouseMove(e, colorOptionsRef)}
-                                >
-                                    {product.colors.map(color => (
-                                        <ColorOptionButton
-                                            key={color}
-                                            color={color}
-                                            isSelected={color === selectedColor}
-                                            onClick={() => handleColorChange(color)}
-                                        />
-                                    ))}
-                                </ColorOptions>
-                                <ProductName>{product.productName}</ProductName>
-                                <ModelName>{product.modelName}</ModelName>
-                                <ProductPrice>{product.price}</ProductPrice>
-                            </ProductInfo>
-                        </ProductCard>
+        <AppContainer> {/* 전체 앱 컨테이너 */}
+            <NavigationBar /> {/* 네비게이션 바 */}
+            <ContentContainer> {/* 내용 컨테이너 */}
+                <Title>{selectedCategoryName} 제품 목록</Title> {/* 선택된 카테고리 이름 표시 */}
+                <FilterContainer> {/* 필터 버튼 컨테이너 */}
+                    <FilterButton onClick={() => handleCategoryChange(null)} active={!selectedCategory}>
+                        전체
+                    </FilterButton>
+                    {categories.map(category => ( // 카테고리 필터 버튼 반복 렌더링
+                        <FilterButton key={category.categoryId} onClick={() => handleCategoryChange(category.categoryId)} active={selectedCategory === category.categoryId}>
+                            {category.categoryName}
+                        </FilterButton>
                     ))}
+                </FilterContainer>
+                <SortSelectContainer> {/* 정렬 선택 컨테이너 */}
+                    <SortSelect value={sortOrder} onChange={handleSortOrderChange}>
+                        <option value="등록일순">등록일순</option> {/* 등록일순 옵션 */}
+                    </SortSelect>
+                </SortSelectContainer>
+                <ProductGrid> {/* 제품 그리드 */}
+                    {products.map(product => { // 제품 목록 반복 렌더링
+                        const selectedOptionId = selectedColors[product.productId] || product.options[0].productOptionsId; // 선택된 옵션 ID
+                        const selectedOption = product.options.find(option => option.productOptionsId === selectedOptionId); // 선택된 옵션 객체
+
+                        return (
+                            <ProductCard key={product.productId}> {/* 제품 카드 */}
+                                <ProductImage src={`https://lovecloud-storage.s3.ap-northeast-2.amazonaws.com/images/${selectedOption.mainImages[0].imageName}`} alt={product.productName} /> {/* 제품 이미지 */}
+                                {/* <WishlistButton onClick={() => toggleWishlist(product.productId)}> */}
+                                {/*     <img src={product.isWishlisted ? SelectedHeart : UnselectedHeart} alt="찜" /> */}
+                                {/* </WishlistButton> */}
+                                <ProductInfo> {/* 제품 정보 */}
+                                    <ColorOptions> {/* 색상 옵션 */}
+                                        {product.options.map(option => ( // 색상 옵션 반복 렌더링
+                                            <ColorOptionButton key={option.productOptionsId} color={option.color} isSelected={option.productOptionsId === selectedOptionId} onClick={() => handleColorChange(product.productId, option.productOptionsId)} />
+                                        ))}
+                                    </ColorOptions>
+                                    <ProductName>{product.productName}</ProductName> {/* 제품 이름 */}
+                                    <ModelName>{selectedOption.modelName}</ModelName> {/* 모델 이름 */}
+                                    <ProductPrice>{`₩${selectedOption.price.toLocaleString()}`}</ProductPrice> {/* 제품 가격 */}
+                                </ProductInfo>
+                            </ProductCard>
+                        );
+                    })}
                 </ProductGrid>
             </ContentContainer>
         </AppContainer>
