@@ -105,6 +105,14 @@ const DescriptionImage = styled.img`
     margin-bottom: 10px;
 `;
 
+const StyledButtonContainer = styled.div`
+    position: sticky;
+    bottom: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+`;
+
 const ProductDetailPage = () => {
     const navigate = useNavigate();
     const { productOptionsId } = useParams();
@@ -187,7 +195,9 @@ const ProductDetailPage = () => {
                         <DescriptionImage key={index} src={image} alt={`Description ${index + 1}`} />
                     ))}
                 </DescriptionImagesContainer>
-                <PurpleButton>펀딩 생성하기</PurpleButton>
+                <StyledButtonContainer>
+                    <PurpleButton>펀딩 생성하기</PurpleButton>
+                </StyledButtonContainer>
             </ContentContainer>
         </AppContainer>
     );
