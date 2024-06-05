@@ -92,7 +92,10 @@ const FundingParticipation = () => {
                     <ListItem>펀딩 제목</ListItem>
                     <Input placeholder="펀딩 제목" />
                     <ListItem>펀딩 마감 기한</ListItem>
-                    <Input placeholder="펀딩 마감 기한" />
+                    <Input
+                        type="datetime-local"
+                        placeholder="펀딩 마감 기한"
+                    />
                     <ListItem>하객에게 전달하고픈 말(상세 페이지에 표시)</ListItem>
                     <TextArea placeholder="하객에게 전달하고픈 말(상세 페이지에 표시)" />
                 </OrderedListContainer>
