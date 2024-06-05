@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 import styled from 'styled-components';
 import Slider from 'react-slick';
 import AppContainer from "../../components/AppContainer";
@@ -105,39 +106,19 @@ const DescriptionImage = styled.img`
     margin-bottom: 10px;
 `;
 
-const StyledButtonContainer = styled.div`
-    position: sticky;
+const ButtonWrapper = styled.div`
+    padding-top: 0px;
+    padding-bottom: 0px;
+    position: fixed;
     bottom: 10px;
     width: 100%;
-    display: flex;
-    justify-content: center;
 `;
 
 const ProductDetailPage = () => {
     const navigate = useNavigate();
     const { productOptionsId } = useParams();
     const [selectedColor, setSelectedColor] = useState(productOptionsId);
-
-    const product = {
-        productName: "BESPOKE 냉장고 4도어 902L",
-        price: 1890000,
-        modelName: "RF90DG9111S9",
-        mainImages: [
-            "https://via.placeholder.com/400x300",
-            "https://via.placeholder.com/400x300",
-            "https://via.placeholder.com/400x300"
-        ],
-        descriptionImages: [
-            "https://via.placeholder.com/400x300",
-            "https://via.placeholder.com/400x300",
-            "https://via.placeholder.com/400x300"
-        ],
-        colorOptions: [
-            { color: "#EEEEEE", id: '1' },
-            { color: "#555555", id: '2' },
-            { color: "#CCCCCC", id: '3' }
-        ]
-    };
+    const [product, setProduct] = useState(null);
 
     const settings = {
         dots: true,
@@ -150,14 +131,32 @@ const ProductDetailPage = () => {
         cssEase: "linear"
     };
 
+    const fetchProductDetails = async (productOptionsId) => {
+        try {
+            const response = await axios.get(`http://localhost:8080/items/${productOptionsId}`);
+            setProduct(response.data);
+            setSelectedColor(response.data.selectedOption.productOptionsId);
+        } catch (error) {
+            console.error('Error fetching product details:', error);
+        }
+    };
+
     const handleColorOptionClick = (id) => {
         setSelectedColor(id);
         navigate(`/items/${id}`);
+        fetchProductDetails(id);
     };
 
     useEffect(() => {
-        setSelectedColor(productOptionsId);
+        fetchProductDetails(productOptionsId);
     }, [productOptionsId]);
+
+    if (!product) return <div>Loading...</div>;
+
+    const allColorOptions = [
+        ...product.otherOptions,
+        { productOptionsId: product.selectedOption.productOptionsId, color: product.selectedOption.color }
+    ];
 
     return (
         <AppContainer>
@@ -168,36 +167,36 @@ const ProductDetailPage = () => {
                     <CenterTitle>상품 상세</CenterTitle>
                 </TopContainer>
                 <ImageSlider {...settings}>
-                    {product.mainImages.map((image, index) => (
+                    {product.selectedOption.mainImages.map((image, index) => (
                         <div key={index}>
-                            <img src={image} alt={`View ${index + 1}`} />
+                            <img src={`https://lovecloud-storage.s3.ap-northeast-2.amazonaws.com/images/${image.imageName}`} alt={`View ${index + 1}`} />
                         </div>
                     ))}
                 </ImageSlider>
                 <ColorOptionsContainer>
-                    {product.colorOptions.map((option) => (
+                    {allColorOptions.map((option) => (
                         <ColorOption
-                            key={option.id}
+                            key={option.productOptionsId}
                             color={option.color}
-                            isSelected={option.id === selectedColor}
-                            onClick={() => handleColorOptionClick(option.id)}
+                            isSelected={option.productOptionsId === selectedColor}
+                            onClick={() => handleColorOptionClick(option.productOptionsId)}
                         />
                     ))}
                 </ColorOptionsContainer>
                 <ProductInfoContainer>
                     <ProductInfo>{product.productName}</ProductInfo>
-                    <ProductModel>{product.modelName}</ProductModel>
-                    <ProductPrice>₩{product.price.toLocaleString()}</ProductPrice>
+                    <ProductModel>{product.selectedOption.modelName}</ProductModel>
+                    <ProductPrice>₩{product.selectedOption.price.toLocaleString()}</ProductPrice>
                 </ProductInfoContainer>
                 <SectionTitle>상품 상세 정보</SectionTitle>
                 <DescriptionImagesContainer>
-                    {product.descriptionImages.map((image, index) => (
-                        <DescriptionImage key={index} src={image} alt={`Description ${index + 1}`} />
+                    {product.selectedOption.descriptionImages.map((image, index) => (
+                        <DescriptionImage key={index} src={`https://lovecloud-storage.s3.ap-northeast-2.amazonaws.com/images/${image.imageName}`} alt={`Description ${index + 1}`} />
                     ))}
                 </DescriptionImagesContainer>
-                <StyledButtonContainer>
+                <ButtonWrapper>
                     <PurpleButton>펀딩 생성하기</PurpleButton>
-                </StyledButtonContainer>
+                </ButtonWrapper>
             </ContentContainer>
         </AppContainer>
     );
