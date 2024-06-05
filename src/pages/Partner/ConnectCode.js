@@ -28,7 +28,7 @@ const ButtonWrapper = styled.div`
   padding-bottom: 0px;
   position: fixed;
   bottom: 10px;
-  width: 300px;
+  width: 100%;
 `;
 
 const CodeContainer = styled.div`

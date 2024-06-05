@@ -35,8 +35,8 @@ const ButtonWrapper = styled.div`
   padding-top: 0px;
   padding-bottom: 0px;
   position: fixed;
-  bottom: 10px;
-  width: 300px;
+  bottom: 24px;
+  width: 352px;
 `;
 
 function PartnerConnect() {
@@ -73,19 +73,17 @@ function PartnerConnect() {
     };
 
     return(
-
-
-
         <AppContainer>
         <NavigationBar />
         <ContentContainer>
-            <Title>파트너 연결 후<br /><span style={{ color : '#4c3073' }}>LOVE CLOUD</ span>를 시작해보세요.</Title>
+            <Title>파트너 연결 후<br /><span style={{ color : '#4c3073' }}>LOVE CLOUD</span>를 시작해보세요.</Title>
             <Comment>나의 코드 복사</Comment>
             <Code>
                 <p onClick={handleCopyCode} style={{ cursor : 'pointer' }}>
                     {inviteCode || '코드를 불러오는 중...'}
                 </p>
             </Code>
+
             <ButtonWrapper>
             <Link to="/sendinvitation" style = {{ color: 'inherit' , textDecoration : 'none' }}>
                 <PurpleButton>초대장 보내기</PurpleButton>

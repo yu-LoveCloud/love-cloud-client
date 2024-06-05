@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 const ContentContainer = styled.div`
-  max-width: 345px;
+  max-width: 352px;
   padding-left: 24px;
   padding-right: 24px;
   padding-top: 24px;

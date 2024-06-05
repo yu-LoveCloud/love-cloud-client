@@ -4,12 +4,7 @@ import styled from "styled-components";
 import AppContainer from "../../components/AppContainer";
 import NavigationBar from '../../components/Nav/NavigationBar';
 import ContentContainer from '../../components/ContentContainer';
-
-const Title = styled.h2`
-  color: #4C3073;
-  padding-top: 40px;
-  margin-top: auto;
-`;
+import { Title } from "../../components/Typography";
 
 const Input = styled.input`
   width: 100%;
@@ -75,20 +70,27 @@ function LoginForm({ children, onClick }) {
     };
 
     const handleSubmit = async (event) => {
-        event.preventDefault();
-        try {
-            const response = await fetch('http://localhost:3000/users?email=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password));
-            const data = await response.json();
-            if (data.length > 0) {
-                setError('');
-            } else {
-                setError('이메일 또는 비밀번호가 일치하지 않습니다.');
-            }
-        } catch (error) {
-            console.error('Error during login:', error);
-            setError('로그인 중 에러가 발생했습니다.');
-        }
-    };
+      event.preventDefault();
+      try {
+          const response = await fetch('http://127.0.0.1:3306/api/login', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ email, password })
+          });
+          const data = await response.json();
+          if (response.ok && data.success) {
+              setError('');
+          } else {
+              setError(data.message || '이메일 또는 비밀번호가 일치하지 않습니다.');
+          }
+      } catch (error) {
+          console.error('Error during login:', error);
+          setError('로그인 중 에러가 발생했습니다.');
+      }
+  };
+  
 
     const handleGoogleLogin = () => {
         const clientId = '';
@@ -127,9 +129,9 @@ function LoginForm({ children, onClick }) {
                        onChange={handlePasswordChange}
                        style={{ marginBottom: '20px' }}
                    />
-               </div>
-               <LoginButtonWrapper>
-               <Link to="/" style = {{ color: 'inherit' , textDecoration : 'none' }}>
+                </div>
+                <LoginButtonWrapper>
+                <Link to="/" style = {{ color: 'inherit' , textDecoration : 'none' }}>
                   <LoginButton onClick={onClick}>{children}로그인</LoginButton>
                 </ Link>
                 </LoginButtonWrapper>
@@ -149,7 +151,7 @@ function LoginForm({ children, onClick }) {
                     <SnsImg src='/images/NaverLogin.png' alt='' />
                 </SnsButton>
                </div>
-       </form>
+        </form>
         </ContentContainer>
       </AppContainer>
        

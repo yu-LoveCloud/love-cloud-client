@@ -7,6 +7,7 @@ import ChangePassword from "./pages/UserAccount/ChangePassword";
 import RefundAccount from "./pages/UserAccount/RefundAccount";
 import PartnerConnect from "./pages/Partner/PartnerConnect";
 import ConnectCode from "./pages/Partner/ConnectCode";
+import MyPage from "./pages/UserAccount/MyPage";
 
 
 function Router() {
@@ -20,6 +21,7 @@ function Router() {
       <Route path="/refundaccount" element={<RefundAccount />} />
       <Route path="/partnerconnect" element={<PartnerConnect />} />
       <Route path="/connectcode" element={<ConnectCode />} />
+      <Route path="/mypage" element={<MyPage />} />
     </Routes>
   );
 }

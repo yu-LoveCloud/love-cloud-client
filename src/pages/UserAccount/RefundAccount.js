@@ -5,14 +5,7 @@ import AppContainer from "../../components/AppContainer";
 import NavigationBar from '../../components/Nav/NavigationBar';
 import ContentContainer from '../../components/ContentContainer';
 import PurpleButton from '../../components/button/PurpleButton';
-
-const Title = styled.h2`
-  color: #000000;
-  padding-top: 10px;
-  margin-top: auto;
-  width: 100%;
-  text-align: center;
-`;
+import { Title } from "../../components/Typography";
 
 const Input = styled.input`
   width: 100%;
@@ -56,7 +49,7 @@ function RefundAccount() {
     const handleSubmit = async (event) => {
       event.preventDefault();
       try {
-          const response = await fetch('http://localhost:3000/users', {
+          const response = await fetch('http://127.0.0.1:3306', {
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json'
@@ -85,7 +78,7 @@ function RefundAccount() {
             <p>환불 계좌 정보</p>
             <h4 style={{ marginBottom: '4px' }}>은행명</h4>
             <BankSelect value={bank} onChange={handleBankChange}>
-                {<option bank="">은행명</option>} {/* 일단 이정도만 넣어두고 나중에 추가 예정 */}
+                {<option bank="">은행명</option>} {/* 일단 이정도만 넣어두고 나중에 추가 예정 , 마이페이지로 옮기기 */}
                 <option bank="NH">NH농협</option>
                 <option bank="KAKAO">카카오뱅크</option>
                 <option bank="KB">KB국민</option>
