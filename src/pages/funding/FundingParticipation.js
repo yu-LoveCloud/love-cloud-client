@@ -6,183 +6,99 @@ import AppContainer from "../../components/AppContainer";
 import NavigationBar from "../../components/Nav/NavigationBar";
 import ContentContainer from "../../components/ContentContainer";
 import PurpleButton from "../../components/button/PurpleButton";
+import BackButtonIcon from '../../assets/images/back-button.png';
+import { TopContainer, BackButton, CenterTitle } from '../../components/Header/Header';
+import { OrderedListContainer, ListItem, Input, TextArea } from "../../components/Typography";
 
-const TopContainer = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    margin-bottom: 20px;
-`;
 
-const BackButton = styled.img`
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
+const ButtonWrapper = styled.div`
+    padding-top: 0px;
+    padding-bottom: 0px;
     position: absolute;
-    left: 10px;
+    bottom: 10px;
+    width: calc(100% - 48px);
 `;
 
-const CenterTitle = styled.div`
-    font-size: 20px;
+const ProductInfoTitle = styled.div`
+    font-size: 16px;
     font-weight: bold;
-    font-family: "Pretendard";
+    margin-bottom: 10px;
 `;
 
 const ProductInfoContainer = styled.div`
     display: flex;
     align-items: center;
-    padding: 10px;
+    justify-content: space-between;
+    padding: 16px;
     border: 1px solid #ddd;
-    border-radius: 10px;
+    border-radius: 8px;
     margin-bottom: 20px;
 `;
 
 const ProductImage = styled.img`
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     object-fit: cover;
-    border-radius: 10px;
-    margin-right: 10px;
+    border-radius: 8px;
 `;
 
 const ProductDetails = styled.div`
     flex: 1;
+    margin-left: 16px;
 `;
 
 const ProductName = styled.div`
     font-size: 16px;
+    font-family: "Pretendard";
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
 `;
 
 const ProductPrice = styled.div`
     font-size: 14px;
+    font-family: "Pretendard";
     color: #666;
-`;
-
-const FormContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-`;
-
-const Label = styled.label`
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 5px;
-`;
-
-const Input = styled.input`
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-`;
-
-const TextArea = styled.textarea`
-    padding: 10px;
-    font-size: 14px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    resize: none;
-`;
-
-const StyledButtonContainer = styled.div`
-    position: sticky;
-    bottom: 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    background-color: white;
-    padding: 10px 0;
 `;
 
 const FundingParticipation = () => {
     const navigate = useNavigate();
     const { productOptionsId } = useParams();
-    const [product, setProduct] = useState(null);
-    const [title, setTitle] = useState('');
-    const [deadline, setDeadline] = useState('');
-    const [message, setMessage] = useState('');
 
-    useEffect(() => {
-        const fetchProductDetails = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8080/items/${productOptionsId}`);
-                setProduct(response.data);
-            } catch (error) {
-                console.error('Error fetching product details:', error);
-            }
-        };
-
-        fetchProductDetails();
-    }, [productOptionsId]);
-
-    const handleSubmit = async () => {
-        const fundingData = {
-            productOptionsId,
-            title,
-            deadline,
-            message
-        };
-
-        try {
-            await axios.post('http://localhost:8080/funding/create', fundingData);
-            navigate('/funding/success');
-        } catch (error) {
-            console.error('Error creating funding:', error);
+    const product = {
+        productName: "BESPOKE 냉장고 4도어 811L",
+        selectedOption: {
+            mainImages: [{ imageName: "example.jpg" }],
+            price: 3940000
         }
     };
-
-    if (!product) return <div>Loading...</div>;
 
     return (
         <AppContainer>
             <NavigationBar />
             <ContentContainer>
                 <TopContainer>
-                    <BackButton src={'/path/to/back-icon.png'} alt="Back" onClick={() => navigate(-1)} />
-                    <CenterTitle>펀딩 생성하기</CenterTitle>
+                    <BackButton src={BackButtonIcon} alt="Back" onClick={() => navigate(-1)} />
+                    <CenterTitle>펀딩 생성</CenterTitle>
                 </TopContainer>
+                <ProductInfoTitle>상품 정보</ProductInfoTitle>
                 <ProductInfoContainer>
-                    <ProductImage src={`https://lovecloud-storage.s3.ap-northeast-2.amazonaws.com/images/${product.selectedOption.mainImages[0].imageName}`} alt={product.productName} />
+                    <ProductImage src={`https://via.placeholder.com/100`} alt={product.productName} />
                     <ProductDetails>
                         <ProductName>{product.productName}</ProductName>
                         <ProductPrice>₩{product.selectedOption.price.toLocaleString()}</ProductPrice>
                     </ProductDetails>
                 </ProductInfoContainer>
-                <FormContainer>
-                    <div>
-                        <Label>펀딩 제목</Label>
-                        <Input
-                            type="text"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            placeholder="펀딩 제목을 입력하세요"
-                        />
-                    </div>
-                    <div>
-                        <Label>펀딩 마감 기한</Label>
-                        <Input
-                            type="date"
-                            value={deadline}
-                            onChange={(e) => setDeadline(e.target.value)}
-                        />
-                    </div>
-                    <div>
-                        <Label>하객에게 전달하고픈 말(상세 페이지에 표시)</Label>
-                        <TextArea
-                            rows="4"
-                            value={message}
-                            onChange={(e) => setMessage(e.target.value)}
-                            placeholder="하객에게 전달하고픈 말을 입력하세요"
-                        />
-                    </div>
-                </FormContainer>
-                <StyledButtonContainer>
-                    <PurpleButton onClick={handleSubmit}>펀딩 생성하기</PurpleButton>
-                </StyledButtonContainer>
+                <OrderedListContainer>
+                    <ListItem>펀딩 제목</ListItem>
+                    <Input placeholder="펀딩 제목" />
+                    <ListItem>펀딩 마감 기한</ListItem>
+                    <Input placeholder="펀딩 마감 기한" />
+                    <ListItem>하객에게 전달하고픈 말(상세 페이지에 표시)</ListItem>
+                    <TextArea placeholder="하객에게 전달하고픈 말(상세 페이지에 표시)" />
+                </OrderedListContainer>
+                <ButtonWrapper>
+                    <PurpleButton>펀딩 생성하기</PurpleButton>
+                </ButtonWrapper>
             </ContentContainer>
         </AppContainer>
     );
