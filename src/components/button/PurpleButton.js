@@ -21,18 +21,9 @@ const StyledButton = styled.button`
   }
 `;
 
-const ButtonWrapper = styled.div`
-  padding-top: 0px;
-  padding-bottom: 0px;
-`;
-
 // React 컴포넌트에서 스타일드 컴포넌트를 사용
 function PurpleButton({ children, onClick }) {
-  return (
-    <ButtonWrapper>
-      <StyledButton onClick={onClick}>{children}</StyledButton>
-    </ButtonWrapper>
-  );
+  return <StyledButton onClick={onClick}>{children}</StyledButton>;
 }
 
 export default PurpleButton;
