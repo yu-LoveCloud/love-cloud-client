@@ -63,14 +63,42 @@ const ProductPrice = styled.div`
 const FundingParticipation = () => {
     const navigate = useNavigate();
     const { productOptionsId } = useParams();
+    const [product, setProduct] = useState(null);
+    const [title, setTitle] = useState("");
+    const [endDate, setEndDate] = useState("");
+    const [message, setMessage] = useState("");
 
-    const product = {
-        productName: "BESPOKE 냉장고 4도어 811L",
-        selectedOption: {
-            mainImages: [{ imageName: "example.jpg" }],
-            price: 3940000
+    useEffect(() => {
+        const fetchProductDetails = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/items/${productOptionsId}`);
+                setProduct(response.data);
+            } catch (error) {
+                console.error('Error fetching product details:', error);
+            }
+        };
+
+        fetchProductDetails();
+    }, [productOptionsId]);
+
+    const handleCreateFunding = async () => {
+        try {
+            const requestBody = {
+                productOptionsId: productOptionsId,
+                title: title,
+                message: message,
+                endDate: endDate
+            };
+            await axios.post('http://localhost:8080/fundings', requestBody);
+            alert('펀딩이 성공적으로 생성되었습니다.');
+            navigate('/');
+        } catch (error) {
+            console.error('Error creating funding:', error);
+            alert('펀딩 생성에 실패했습니다.');
         }
     };
+
+    if (!product) return <div>Loading...</div>;
 
     return (
         <AppContainer>
@@ -82,7 +110,7 @@ const FundingParticipation = () => {
                 </TopContainer>
                 <ProductInfoTitle>상품 정보</ProductInfoTitle>
                 <ProductInfoContainer>
-                    <ProductImage src={`https://via.placeholder.com/100`} alt={product.productName} />
+                    <ProductImage src={`https://lovecloud-storage.s3.ap-northeast-2.amazonaws.com/images/${product.selectedOption.mainImages[0].imageName}`} alt={product.productName} />
                     <ProductDetails>
                         <ProductName>{product.productName}</ProductName>
                         <ProductPrice>₩{product.selectedOption.price.toLocaleString()}</ProductPrice>
@@ -90,17 +118,27 @@ const FundingParticipation = () => {
                 </ProductInfoContainer>
                 <OrderedListContainer>
                     <ListItem>펀딩 제목</ListItem>
-                    <Input placeholder="펀딩 제목" />
+                    <Input
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        placeholder="펀딩 제목"
+                    />
                     <ListItem>펀딩 마감 기한</ListItem>
                     <Input
                         type="datetime-local"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
                         placeholder="펀딩 마감 기한"
                     />
                     <ListItem>하객에게 전달하고픈 말(상세 페이지에 표시)</ListItem>
-                    <TextArea placeholder="하객에게 전달하고픈 말(상세 페이지에 표시)" />
+                    <TextArea
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        placeholder="하객에게 전달하고픈 말(상세 페이지에 표시)"
+                    />
                 </OrderedListContainer>
                 <ButtonWrapper>
-                    <PurpleButton>펀딩 생성하기</PurpleButton>
+                    <PurpleButton onClick={handleCreateFunding}>펀딩 생성하기</PurpleButton>
                 </ButtonWrapper>
             </ContentContainer>
         </AppContainer>
