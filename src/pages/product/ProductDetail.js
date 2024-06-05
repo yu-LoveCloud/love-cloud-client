@@ -109,9 +109,9 @@ const DescriptionImage = styled.img`
 const ButtonWrapper = styled.div`
     padding-top: 0px;
     padding-bottom: 0px;
-    position: fixed;
+    position: absolute;
     bottom: 10px;
-    width: 100%;
+    width: calc(100% - 48px);
 `;
 
 const ProductDetailPage = () => {
