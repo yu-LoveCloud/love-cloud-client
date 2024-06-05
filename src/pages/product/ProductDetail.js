@@ -151,6 +151,11 @@ const ProductDetailPage = () => {
         fetchProductDetails(productOptionsId);
     }, [productOptionsId]);
 
+    const handleCreateFundingClick = () => {
+        navigate(`/funding/create/${productOptionsId}`);
+    };
+
+
     if (!product) return <div>Loading...</div>;
 
     const allColorOptions = [
@@ -195,7 +200,7 @@ const ProductDetailPage = () => {
                     ))}
                 </DescriptionImagesContainer>
                 <ButtonWrapper>
-                    <PurpleButton>펀딩 생성하기</PurpleButton>
+                    <PurpleButton onClick={handleCreateFundingClick}>펀딩 생성하기</PurpleButton>
                 </ButtonWrapper>
             </ContentContainer>
         </AppContainer>
