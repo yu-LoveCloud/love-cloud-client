@@ -36,7 +36,7 @@ const FundingTitle = styled.div`
     font-size: 16px;
     font-weight: bold;
     font-family: "Pretendard";
-    margin-bottom: 5px;
+    margin-bottom: 10px;
 `;
 
 const FundingInfo = styled.div`
@@ -73,29 +73,21 @@ const Progress = styled.div`
 
 const FundingParticipation = () => {
     const navigate = useNavigate();
+    const { coupleId } = useParams(); // coupleId 파라미터를 받아옴
+    const [fundings, setFundings] = useState([]);
 
-    const fundings = [
-        {
-            id: 1,
-            title: "동은이네 첫 냉장고",
-            participantCount: 12,
-            endDate: "2024-04-27",
-            progress: 50,
-            selectedOption: {
-                mainImages: [{ imageName: "example.jpg" }]
+    useEffect(() => {
+        const fetchFundings = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8080/couples/${coupleId}/fundings`);
+                setFundings(response.data);
+            } catch (error) {
+                console.error('Error fetching fundings:', error);
             }
-        },
-        {
-            id: 2,
-            title: "동은이네 첫 김치 냉장고",
-            participantCount: 1,
-            endDate: "2024-04-27",
-            progress: 5,
-            selectedOption: {
-                mainImages: [{ imageName: "example.jpg" }]
-            }
-        }
-    ];
+        };
+
+        fetchFundings();
+    }, [coupleId]);
 
     return (
         <AppContainer>
@@ -106,22 +98,25 @@ const FundingParticipation = () => {
                     <CenterTitle>현재 진행 중인 펀딩</CenterTitle>
                 </TopContainer>
                 <FundingListContainer>
-                    {fundings.map((funding) => (
-                        <FundingCard key={funding.id}>
-                            <FundingImage src={`https://via.placeholder.com/100`} alt={funding.title} />
-                            <FundingDetails>
-                                <FundingTitle>{funding.title}</FundingTitle>
-                                <FundingInfo>{funding.participantCount}명 참여</FundingInfo>
-                                <FundingInfo>마감 기한 {new Date(funding.endDate).toLocaleDateString()}</FundingInfo>
-                                <FundingProgress>
-                                    <ProgressInfo>펀딩 진행률 {funding.progress}%</ProgressInfo>
-                                    <ProgressBar>
-                                        <Progress progress={funding.progress} />
-                                    </ProgressBar>
-                                </FundingProgress>
-                            </FundingDetails>
-                        </FundingCard>
-                    ))}
+                    {fundings.map((funding) => {
+                        const progress = (funding.currentAmount / funding.targetAmount) * 100;
+                        return (
+                            <FundingCard key={funding.fundingId}>
+                                <FundingImage src={`https://lovecloud-storage.s3.ap-northeast-2.amazonaws.com/images/${funding.productOptions.mainImages[0].imageName}`} alt={funding.title} />
+                                <FundingDetails>
+                                    <FundingTitle>{funding.title}</FundingTitle>
+                                    <FundingInfo>{funding.participantCount}명 참여</FundingInfo>
+                                    <FundingInfo>마감 기한 {new Date(funding.endDate).toLocaleDateString()}</FundingInfo>
+                                    <FundingProgress>
+                                        <ProgressInfo>펀딩 진행률 {progress.toFixed(2)}%</ProgressInfo>
+                                        <ProgressBar>
+                                            <Progress progress={progress} />
+                                        </ProgressBar>
+                                    </FundingProgress>
+                                </FundingDetails>
+                            </FundingCard>
+                        );
+                    })}
                 </FundingListContainer>
             </ContentContainer>
         </AppContainer>
