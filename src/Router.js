@@ -6,6 +6,7 @@ import SignUp from "./pages/UserAccount/SignUp";
 import InvitationCreateProcess1 from "./pages/invitation/InvitationCreateProcess1";
 import InvitationCreateProcess2 from "./pages/invitation/InvitationCreateProcess2";
 import DetailOrder from "./pages/orderManagement/DetailOrder";
+import ListOrder from "./pages/orderManagement/ListOrder";
 
 function Router() {
   return (
@@ -23,6 +24,7 @@ function Router() {
         element={<InvitationCreateProcess2 />}
       />
       <Route path="/orders/:orderId" element={<DetailOrder />} />
+      <Route path="/orders" element={<ListOrder />} />
     </Routes>
   );
 }
