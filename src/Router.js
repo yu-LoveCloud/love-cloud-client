@@ -7,6 +7,7 @@ import InvitationCreateProcess1 from "./pages/invitation/InvitationCreateProcess
 import InvitationCreateProcess2 from "./pages/invitation/InvitationCreateProcess2";
 import DetailOrder from "./pages/orderManagement/DetailOrder";
 import ListOrder from "./pages/orderManagement/ListOrder";
+import OrderCreateProcess2 from "./pages/orderManagement/OrderCreateProcess2";
 
 function Router() {
   return (
@@ -25,6 +26,7 @@ function Router() {
       />
       <Route path="/orders/:orderId" element={<DetailOrder />} />
       <Route path="/orders" element={<ListOrder />} />
+      <Route path="/orders/create-process2" element={<OrderCreateProcess2 />} />
     </Routes>
   );
 }
