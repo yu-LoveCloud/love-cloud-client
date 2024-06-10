@@ -5,6 +5,7 @@ import LoginForm from "./pages/UserAccount/LoginForm";
 import SignUp from "./pages/UserAccount/SignUp";
 import InvitationCreateProcess1 from "./pages/invitation/InvitationCreateProcess1";
 import InvitationCreateProcess2 from "./pages/invitation/InvitationCreateProcess2";
+import ProductList from "./pages/product/ProductList";
 
 function Router() {
   return (
@@ -21,6 +22,7 @@ function Router() {
         path="/invitations/create-process2"
         element={<InvitationCreateProcess2 />}
       />
+      <Route path="/products" element={<ProductList />} />
     </Routes>
   );
 }
