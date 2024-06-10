@@ -12,7 +12,7 @@ import FundingCardComponent from '../../components/funding/FundingCardComponent'
 const FundingListContainer = styled.div`
 `;
 
-const FundingParticipation = () => {
+const FundingList = () => {
     const navigate = useNavigate();
     const { coupleId } = useParams(); // coupleId 파라미터를 받아옴
     const [fundings, setFundings] = useState([]);
@@ -30,6 +30,10 @@ const FundingParticipation = () => {
         fetchFundings();
     }, [coupleId]);
 
+    const handleCardClick = (fundingId) => {
+        navigate(`/fundings/${fundingId}`);
+    };
+
     return (
         <AppContainer>
             <NavigationBar />
@@ -40,7 +44,9 @@ const FundingParticipation = () => {
                 </TopContainer>
                 <FundingListContainer>
                     {fundings.map((funding) => (
-                        <FundingCardComponent key={funding.fundingId} funding={funding} />
+                        <div key={funding.fundingId} onClick={() => handleCardClick(funding.fundingId)}>
+                            <FundingCardComponent funding={funding} />
+                        </div>
                     ))}
                 </FundingListContainer>
             </ContentContainer>
@@ -48,4 +54,4 @@ const FundingParticipation = () => {
     );
 }
 
-export default FundingParticipation;
+export default FundingList;
