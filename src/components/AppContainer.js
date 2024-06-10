@@ -7,6 +7,7 @@ const AppContainer = styled.div`
   margin-right: auto;
   background-color: white;
   min-height: 100vh;
+  position: relative;
 `;
 
 export default AppContainer;
