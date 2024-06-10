@@ -13,48 +13,36 @@ import GuestFundingComponent from '../../components/funding/GuestFundingComponen
 
 const FundingDetail = () => {
     const navigate = useNavigate();
+    const { fundingId } = useParams();
+    const [funding, setFunding] = useState(null);
+    const [guestFunding, setGuestFunding] = useState([]);
 
-    const funding = {
-        fundingId: 1,
-        title: '우리의 결혼을 축하해주세요1',
-        message: '여러분의 작은 성원이 큰 기쁨이 됩니다. 많은 참여 부탁드립니다.1',
-        targetAmount: 1940000,
-        currentAmount: 1000,
-        status: 'IN_PROGRESS',
-        endDate: '2024-12-31T23:59:00',
-        participantCount: 1,
-        productOptions: {
-            productOptionsId: 1,
-            mainImages: [
-                { imageId: 1, imageName: '333464cf-168b-4903-9ce2-ccdacd4a1e75.jpg' },
-                { imageId: 2, imageName: 'image2.jpg' }
-            ]
-        },
-        couple: {
-            coupleId: 1,
-            people: [
-                { phoneNumber: '01011111111', weddingRole: 'GROOM', name: '웨딩일' },
-                { phoneNumber: '01022222222', weddingRole: 'BRIDE', name: '웨딩이' }
-            ]
-        }
-    };
+    useEffect(() => {
+        const fetchFunding = async () => {
+            try {
+                const fundingResponse = await axios.get(`http://localhost:8080/fundings/${fundingId}`);
+                setFunding(fundingResponse.data);
+            } catch (error) {
+                console.error('Error fetching funding:', error);
+            }
+        };
 
-    const guestFunding = [
-        {
-            "guestFundingId": 1,
-            "name": "게스트일",
-            "fundingAmount": 1000,
-            "message": "결혼 축하한다. 행복하게 잘 살렴.",
-            "paidAt": "2024-06-07T02:52:44"
-        },
-        {
-            "guestFundingId": 2,
-            "name": "게스트이",
-            "fundingAmount": 2000,
-            "message": "결혼 축2",
-            "paidAt": "2024-06-07T02:52:54"
-        }
-    ];
+        const fetchGuestFunding = async () => {
+            try {
+                const guestFundingResponse = await axios.get(`http://localhost:8080/fundings/${fundingId}/guest-fundings`);
+                setGuestFunding(guestFundingResponse.data);
+            } catch (error) {
+                console.error('Error fetching guest fundings:', error);
+            }
+        };
+
+        fetchFunding();
+        fetchGuestFunding();
+    }, [fundingId]);
+
+    if (!funding) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <AppContainer>
