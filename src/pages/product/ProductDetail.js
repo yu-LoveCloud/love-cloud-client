@@ -7,31 +7,10 @@ import AppContainer from "../../components/AppContainer";
 import NavigationBar from "../../components/Nav/NavigationBar";
 import ContentContainer from "../../components/ContentContainer";
 import PurpleButton from "../../components/button/PurpleButton";
+import { TopContainer, BackButton, CenterTitle } from "../../components/Header/Header";        
 import BackButtonIcon from '../../assets/images/back-button.png';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
-const TopContainer = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    margin-bottom: 20px;
-`;
-
-const BackButton = styled.img`
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-    position: absolute;
-    left: 10px;
-`;
-
-const CenterTitle = styled.div`
-    font-size: 20px;
-    font-weight: bold;
-    font-family: "Pretendard";
-`;
 
 const ImageSlider = styled(Slider)`
     .slick-slide img {
@@ -151,6 +130,11 @@ const ProductDetailPage = () => {
         fetchProductDetails(productOptionsId);
     }, [productOptionsId]);
 
+    const handleCreateFundingClick = () => {
+        navigate(`/funding/create/${productOptionsId}`);
+    };
+
+
     if (!product) return <div>Loading...</div>;
 
     const allColorOptions = [
@@ -195,7 +179,7 @@ const ProductDetailPage = () => {
                     ))}
                 </DescriptionImagesContainer>
                 <ButtonWrapper>
-                    <PurpleButton>펀딩 생성하기</PurpleButton>
+                    <PurpleButton onClick={handleCreateFundingClick}>펀딩 생성하기</PurpleButton>
                 </ButtonWrapper>
             </ContentContainer>
         </AppContainer>
