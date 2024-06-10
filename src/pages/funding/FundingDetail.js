@@ -6,8 +6,10 @@ import AppContainer from "../../components/AppContainer";
 import NavigationBar from "../../components/Nav/NavigationBar";
 import ContentContainer from "../../components/ContentContainer";
 import BackButtonIcon from '../../assets/images/back-button.png';
+import PurpleButton from "../../components/button/PurpleButton";
 import { TopContainer, BackButton, CenterTitle } from '../../components/Header/Header';
 import FundingCardComponent from '../../components/funding/FundingCardComponent';
+import GuestFundingComponent from '../../components/funding/GuestFundingComponent';
 
 const FundingDetail = () => {
     const navigate = useNavigate();
@@ -37,6 +39,23 @@ const FundingDetail = () => {
         }
     };
 
+    const guestFunding = [
+        {
+            "guestFundingId": 1,
+            "name": "게스트일",
+            "fundingAmount": 1000,
+            "message": "결혼 축하한다. 행복하게 잘 살렴.",
+            "paidAt": "2024-06-07T02:52:44"
+        },
+        {
+            "guestFundingId": 2,
+            "name": "게스트이",
+            "fundingAmount": 2000,
+            "message": "결혼 축2",
+            "paidAt": "2024-06-07T02:52:54"
+        }
+    ];
+
     return (
         <AppContainer>
             <NavigationBar />
@@ -46,6 +65,10 @@ const FundingDetail = () => {
                     <CenterTitle>펀딩 상세</CenterTitle>
                 </TopContainer>
                 <FundingCardComponent funding={funding} />
+                <GuestFundingComponent message={funding.message} guestFunding={guestFunding} />
+                <ButtonWrapper>
+                    <PurpleButton>펀딩 참여하기</PurpleButton>
+                </ButtonWrapper>
             </ContentContainer>
         </AppContainer>
     )
@@ -53,37 +76,10 @@ const FundingDetail = () => {
 
 export default FundingDetail;
 
-const FundingCard = styled.div`
-    display: flex;
-    align-items: center;
-    padding: 13px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-`;
-
-const FundingImage = styled.img`
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-right: 16px;
-`;
-
-const FundingDetails = styled.div`
-    flex: 1;
-`;
-
-const FundingTitle = styled.div`
-    font-size: 16px;
-    font-weight: bold;
-    font-family: "Pretendard";
-    margin-bottom: 10px;
-`;
-
-const FundingInfo = styled.div`
-    font-size: 12px;
-    font-family: "Pretendard";
-    color: #666;
-    text-align: right;
+const ButtonWrapper = styled.div`
+    padding-top: 0px;
+    padding-bottom: 0px;
+    position: absolute;
+    bottom: 10px;
+    width: calc(100% - 48px);
 `;
