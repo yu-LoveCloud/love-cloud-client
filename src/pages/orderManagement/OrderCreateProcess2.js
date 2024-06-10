@@ -25,6 +25,7 @@ function OrderCreateProcess2() {
       alert("잘못된 접근입니다.");
       navigate("/"); //리다이렉트
     }
+    console.log("selectedFundings:", selectedFundings);
   }, [location.state, selectedFundings, navigate]);
 
   const [formData, setFormData] = useState({
@@ -35,9 +36,9 @@ function OrderCreateProcess2() {
     receiverName: "",
     receiverPhoneNumber: "",
     deliveryName: "",
-    receiverZipCode: "",
-    receiverAddress: "",
-    receiverAddressDetail: "",
+    zipcode: "",
+    address: "",
+    detailAddress: "",
     deliveryMemo: "",
   });
 
@@ -75,43 +76,67 @@ function OrderCreateProcess2() {
       newErrors.deliveryName = "배송지 별칭을 입력해주세요.";
     }
 
-    if (!formData.receiverAddress) {
-      newErrors.receiverAddress = "주소를 입력해주세요.";
+    if (!formData.address) {
+      newErrors.address = "주소를 입력해주세요.";
     }
 
-    if (!formData.receiverAddressDetail) {
-      newErrors.receiverAddressDetail = "상세주소를 입력해주세요.";
+    if (!formData.detailAddress) {
+      newErrors.detailAddress = "상세주소를 입력해주세요.";
     }
 
-    if (!/^\d{5}$/.test(formData.receiverZipCode)) {
-      newErrors.receiverZipCode = "우편번호를 5자리로 입력해주세요.";
+    if (!/^\d{5}$/.test(formData.zipcode)) {
+      newErrors.zipcode = "우편번호를 5자리로 입력해주세요.";
     }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async () => {
+  // const handleSubmit = async () => {
+  //   if (!validateForm()) {
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = createOrder(formData);
+
+  //     console.log("주문정보:" + response.status);
+  //     if (response.status === 201) {
+  //       alert("주문이 완료되었습니다.");
+  //       navigate("/orders");
+  //     } else if (response.status === 403) {
+  //       alert("주문 권한이 없습니다.");
+  //     } else {
+  //       alert("주문이 실패했습니다. " + response);
+  //     }
+  //   } catch (error) {
+  //     console.error("주문 생성 중 오류 발생: ", error);
+  //     alert("주문 생성 중 오류가 발생했습니다.");
+  //   }
+  // };
+
+  const handleSubmit = () => {
     if (!validateForm()) {
       return;
     }
 
-    try {
-      const response = await createOrder(formData);
-
-      if (response.ok) {
+    createOrder(formData)
+      .then((data) => {
+        // console.log("주문 생성 응답 데이터:", data);
         alert("주문이 완료되었습니다.");
-      } else {
-        if (response.status === 403) {
-          alert("주문 권한이 없습니다.");
+        navigate("/orders");
+      })
+      .catch((error) => {
+        console.error("주문 생성 중 오류 발생: ", error);
+        if (error.response && error.response.data) {
+          console.error("서버 오류 메시지: ", error.response.data);
+          alert(
+            "주문 생성 중 오류가 발생했습니다: " + error.response.data.detail
+          );
         } else {
-          alert("주문이 실패했습니다.");
+          alert("주문 생성 중 오류가 발생했습니다.");
         }
-      }
-    } catch (error) {
-      console.error("주문 생성 중 오류 발생: ", error);
-      alert("주문 생성 중 오류가 발생했습니다.");
-    }
+      });
   };
 
   const mockData = {
@@ -121,9 +146,9 @@ function OrderCreateProcess2() {
     receiverName: "홍길동",
     receiverPhoneNumber: "010-1234-5678",
     deliveryName: "우리집",
-    receiverZipCode: "12345",
-    receiverAddress: "서울특별시 강남구 테헤란로 123",
-    receiverAddressDetail: "아파트 101동 202호",
+    zipcode: "12345",
+    address: "서울특별시 강남구 테헤란로 123",
+    detailAddress: "아파트 101동 202호",
     deliveryMemo: "부재 시 경비실에 맡겨주세요.",
   };
 
@@ -200,32 +225,30 @@ function OrderCreateProcess2() {
           <Label>주소</Label>
           <Input
             type="text"
-            name="receiverAddress"
-            placeholder={mockData.receiverAddress}
-            value={formData.receiverAddress}
+            name="address"
+            placeholder={mockData.address}
+            value={formData.address}
             onChange={handleChange}
           />
-          {errors.receiverAddress && <Error>{errors.receiverAddress}</Error>}
+          {errors.address && <Error>{errors.address}</Error>}
           <Label>상세주소</Label>
           <Input
             type="text"
-            name="receiverAddressDetail"
-            placeholder={mockData.receiverAddressDetail}
-            value={formData.receiverAddressDetail}
+            name="detailAddress"
+            placeholder={mockData.detailAddress}
+            value={formData.detailAddress}
             onChange={handleChange}
           />
-          {errors.receiverAddressDetail && (
-            <Error>{errors.receiverAddressDetail}</Error>
-          )}
+          {errors.detailAddress && <Error>{errors.detailAddress}</Error>}
           <Label>우편번호</Label>
           <Input
             type="text"
-            name="receiverZipCode"
-            placeholder={mockData.receiverZipCode}
-            value={formData.receiverZipCode}
+            name="zipcode"
+            placeholder={mockData.zipcode}
+            value={formData.zipcode}
             onChange={handleChange}
           />
-          {errors.receiverZipCode && <Error>{errors.receiverZipCode}</Error>}
+          {errors.zipcode && <Error>{errors.zipcode}</Error>}
           <Label>배송 메모</Label>
           <Input
             type="text"
