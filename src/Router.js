@@ -7,7 +7,9 @@ import InvitationCreateProcess1 from "./pages/invitation/InvitationCreateProcess
 import InvitationCreateProcess2 from "./pages/invitation/InvitationCreateProcess2";
 import ProductList from "./pages/product/ProductList";
 import ProductDetail from "./pages/product/ProductDetail";
-import FundingParticipation from './pages/funding/FundingParticipation';
+import FundingCreate from './pages/funding/FundingCreate';
+import FundingList from './pages/funding/FundingList';
+import FundingDetail from './pages/funding/FundingDetail';
 
 function Router() {
   return (
@@ -26,7 +28,9 @@ function Router() {
       />
       <Route path="/products" element={<ProductList />} />
       <Route path="/items/:productOptionsId" element={<ProductDetail />} />
-      <Route path="/funding/create/:productOptionsId" element={<FundingParticipation />} />
+      <Route path="/funding/create/:productOptionsId" element={<FundingCreate />} />
+      <Route path="/couples/:coupleId/fundings" element={<FundingList />} />
+      <Route path="/fundings/:fundingId" element={<FundingDetail />} />
     </Routes>
   );
 }
