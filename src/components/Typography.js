@@ -77,3 +77,10 @@ export const TextArea = styled(Input).attrs({ as: "textarea" })`
   resize: none; /* 크기 조절 비활성화 */
   padding: 12px; /* padding 추가 */
 `;
+
+export const SectionTitle = styled.div`
+  font-size: 16px;
+  font-weight: bold;
+  font-family: "Pretendard";
+  margin: 20px 0 20px;
+`;

@@ -10,6 +10,7 @@ import ProductDetail from "./pages/product/ProductDetail";
 import FundingCreate from './pages/funding/FundingCreate';
 import FundingList from './pages/funding/FundingList';
 import FundingDetail from './pages/funding/FundingDetail';
+import FundingParticipate from './pages/funding/FundingParticipate';
 
 function Router() {
   return (
@@ -31,6 +32,7 @@ function Router() {
       <Route path="/funding/create/:productOptionsId" element={<FundingCreate />} />
       <Route path="/couples/:coupleId/fundings" element={<FundingList />} />
       <Route path="/fundings/:fundingId" element={<FundingDetail />} />
+      <Route path="/fundings/:fundingId/participate" element={<FundingParticipate />} />
     </Routes>
   );
 }
