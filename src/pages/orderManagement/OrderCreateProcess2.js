@@ -13,22 +13,22 @@ import {
 import styled from "styled-components";
 import PurpleButton from "../../components/button/PurpleButton";
 import OrderProduct from "../../components/orderManagement/OrderProduct";
-import { createOrder } from "../../api/orderManagement/orderApi";
+import { createOrder } from "../../api/orderApi";
 
 function OrderCreateProcess2() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { fundingIds = [], orderProducts = [] } = location.state || {};
+  const { selectedFundings = [] } = location.state || {};
 
   useEffect(() => {
-    if (!location.state || !fundingIds.length || !orderProducts.length) {
+    if (!location.state || !selectedFundings.length) {
       alert("잘못된 접근입니다.");
-      navigate("/"); // 원하는 경로로 리다이렉트
+      navigate("/"); //리다이렉트
     }
-  }, [location.state, fundingIds, orderProducts, navigate]);
+  }, [location.state, selectedFundings, navigate]);
 
   const [formData, setFormData] = useState({
-    fundingIds,
+    fundingIds: selectedFundings.map((funding) => funding.fundingId),
     ordererName: "",
     ordererPhoneNumber: "",
     ordererMemo: "",
@@ -115,7 +115,6 @@ function OrderCreateProcess2() {
   };
 
   const mockData = {
-    fundingIds: [],
     ordererName: "홍길동",
     ordererPhoneNumber: "010-1234-5678",
     ordererMemo: "빠른 배송 부탁드립니다.",
@@ -134,11 +133,9 @@ function OrderCreateProcess2() {
       <ContentContainer>
         <Title>주문서 작성</Title>
         <Hr />
-        {orderProducts.map((orderProduct) => {
-          return (
-            <OrderProduct key={orderProduct.productId} product={orderProduct} />
-          );
-        })}
+        {selectedFundings.map((funding) => (
+          <OrderProduct key={funding.productId} product={funding} />
+        ))}
         <Hr />
         <OrderedListContainer>
           <ListItem>주문자 정보</ListItem>

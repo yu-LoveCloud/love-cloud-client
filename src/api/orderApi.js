@@ -1,13 +1,4 @@
-// src/services/orderApi.js
-import axios from "axios";
-import { BASE_URL } from "../../constants/global";
-
-const apiClient = axios.create({
-  baseURL: BASE_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
+import { apiClient } from "./apiClient";
 
 export const getOrderDetail = async (orderId) => {
   try {
