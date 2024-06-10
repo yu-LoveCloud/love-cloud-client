@@ -9,6 +9,7 @@ import ProductList from "./pages/product/ProductList";
 import ProductDetail from "./pages/product/ProductDetail";
 import FundingCreate from './pages/funding/FundingCreate';
 import FundingList from './pages/funding/FundingList';
+import FundingDetail from './pages/funding/FundingDetail';
 
 function Router() {
   return (
@@ -29,6 +30,7 @@ function Router() {
       <Route path="/items/:productOptionsId" element={<ProductDetail />} />
       <Route path="/funding/create/:productOptionsId" element={<FundingCreate />} />
       <Route path="/couples/:coupleId/fundings" element={<FundingList />} />
+      <Route path="/fundings/:fundingId" element={<FundingDetail />} />
     </Routes>
   );
 }
