@@ -49,13 +49,13 @@ const FundingDetail = () => {
             <NavigationBar />
             <ContentContainer>
                 <TopContainer>
-                <BackButton src={BackButtonIcon} alt="Back" onClick={() => navigate(-1)} />
+                    <BackButton src={BackButtonIcon} alt="Back" onClick={() => navigate(-1)} />
                     <CenterTitle>펀딩 상세</CenterTitle>
                 </TopContainer>
                 <FundingCardComponent funding={funding} />
                 <GuestFundingComponent message={funding.message} guestFunding={guestFunding} />
                 <ButtonWrapper>
-                    <PurpleButton>펀딩 참여하기</PurpleButton>
+                    <PurpleButton onClick={() => navigate(`/fundings/${fundingId}/participate`)}>펀딩 참여하기</PurpleButton>
                 </ButtonWrapper>
             </ContentContainer>
         </AppContainer>

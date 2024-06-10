@@ -2,19 +2,14 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { OrderedListContainer, ListItem, Input, TextArea } from "../../components/Typography";
 
-const FundingParticipationForm = () => {
-    const [name, setName] = useState('');
-    const [phone, setPhone] = useState('');
-    const [email, setEmail] = useState('');
-    const [fundingAmount, setFundingAmount] = useState('');
-    const [message, setMessage] = useState('');
+const FundingParticipationForm = ({ setName, setPhone, setEmail, setFundingAmount, setMessage, name, phone, email, fundingAmount, message }) => {
 
     const handleAmountButtonClick = (amount) => {
         setFundingAmount(prevAmount => formatNumber(Number(prevAmount.replace(/,/g, '')) + amount));
     };
 
     const handleFundingAmountChange = (e) => {
-        const value = e.target.value.replace(/,/g, ''); // 기존 쉼표 제거
+        const value = e.target.value.replace(/,/g, '');
         if (!isNaN(value) && value.trim() !== '') {
             setFundingAmount(formatNumber(value));
         } else {
@@ -22,8 +17,21 @@ const FundingParticipationForm = () => {
         }
     };
 
+    const handlePhoneChange = (e) => {
+        const value = e.target.value.replace(/-/g, '');
+        if (!isNaN(value)) {
+            setPhone(formatPhoneNumber(value));
+        }
+    };
+
     const formatNumber = (value) => {
         return Number(value).toLocaleString();
+    };
+
+    const formatPhoneNumber = (value) => {
+        if (value.length <= 3) return value;
+        if (value.length <= 7) return `${value.slice(0, 3)}-${value.slice(3)}`;
+        return `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7)}`;
     };
 
     return (
@@ -39,7 +47,7 @@ const FundingParticipationForm = () => {
                 <Input
                     type="text"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={handlePhoneChange}
                     placeholder="휴대폰 번호를 입력해주세요"
                 />
                 <ListItem>이메일</ListItem>
@@ -89,16 +97,17 @@ const InputWrapper = styled.div`
 `;
 
 const StyledInput = styled(Input)`
-    padding-right: 30px; /* 오른쪽에 여백 추가 */
+    padding-right: 30px;
 `;
 
 const AmountText = styled.span`
     position: absolute;
     right: 10px;
+    top: 30%;
+    transform: translateY(-50%);
     font-family: "Pretendard";
     font-size: 14px;
     color: #767676;
-    margin-bottom: 15px;
 `;
 
 const ButtonGroup = styled.div`

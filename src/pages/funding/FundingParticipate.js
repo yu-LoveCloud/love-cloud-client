@@ -18,7 +18,13 @@ const FundingParticipate = () => {
     const navigate = useNavigate();
     const { fundingId } = useParams();
     const [funding, setFunding] = useState(null);
-    
+
+    const [name, setName] = useState('');
+    const [phone, setPhone] = useState('');
+    const [email, setEmail] = useState('');
+    const [fundingAmount, setFundingAmount] = useState('');
+    const [message, setMessage] = useState('');
+
     useEffect(() => {
         const fetchFundingData = async () => {
             try {
@@ -32,8 +38,22 @@ const FundingParticipate = () => {
         fetchFundingData();
     }, [fundingId]);
 
+    const handleSubmit = () => {
+        const plainPhone = phone.replace(/-/g, '');
+        const plainFundingAmount = fundingAmount.replace(/,/g, '');
+
+        const data = {
+            name,
+            phone: plainPhone,
+            email,
+            fundingAmount: plainFundingAmount,
+            message,
+        };
+        console.log('Submitted data:', data);
+    };
+
     if (!funding) return <div>Loading...</div>;
-    
+
     return (
         <AppContainer>
             <NavigationBar />
@@ -48,13 +68,24 @@ const FundingParticipate = () => {
                 <RecipientCardComponent people={funding.couple.people} />
                 <Divider />
                 <SectionTitle>보내시는 분</SectionTitle>
-                <FundingParticipationForm />
+                <FundingParticipationForm
+                    setName={setName}
+                    setPhone={setPhone}
+                    setEmail={setEmail}
+                    setFundingAmount={setFundingAmount}
+                    setMessage={setMessage}
+                    name={name}
+                    phone={phone}
+                    email={email}
+                    fundingAmount={fundingAmount}
+                    message={message}
+                />
                 <ButtonWrapper>
-                    <PurpleButton>결제하기</PurpleButton>
+                    <PurpleButton onClick={handleSubmit}>결제하기</PurpleButton>
                 </ButtonWrapper>
             </ContentContainer>
         </AppContainer>
-    )
+    );
 }
 
 export default FundingParticipate;
