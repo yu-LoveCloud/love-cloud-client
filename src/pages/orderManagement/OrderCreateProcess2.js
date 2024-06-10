@@ -127,14 +127,13 @@ function OrderCreateProcess2() {
         navigate("/orders");
       })
       .catch((error) => {
-        console.error("주문 생성 중 오류 발생: ", error);
-        if (error.response && error.response.data) {
-          console.error("서버 오류 메시지: ", error.response.data);
-          alert(
-            "주문 생성 중 오류가 발생했습니다: " + error.response.data.detail
-          );
-        } else {
-          alert("주문 생성 중 오류가 발생했습니다.");
+        if (error.response) {
+          console.error("주문 생성 중 오류 발생zz: ", error.response.data);
+          if (error.status === 403) {
+            alert("주문 권한이 없습니다.");
+          } else {
+            alert("주문이 실패했습니다. " + error.response.data.message);
+          }
         }
       });
   };
