@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
 import AppContainer from "../../components/AppContainer";
@@ -141,6 +142,7 @@ const ProductList = () => {
     const [selectedCategory, setSelectedCategory] = useState(null); // 선택된 카테고리 상태 선언
     const [sortOrder, setSortOrder] = useState('등록일순'); // 정렬 순서 상태 선언
     const [selectedColors, setSelectedColors] = useState({}); // 선택된 색상 상태 선언
+    const navigate = useNavigate(); // useNavigate 훅 선언
 
     useEffect(() => {
         const fetchCategories = async () => { // 카테고리를 가져오는 함수 선언
@@ -184,6 +186,10 @@ const ProductList = () => {
         }));
     };
 
+    const handleProductClick = (productId, selectedOptionId) => { // 상품 클릭 핸들러 함수
+        navigate(`/items/${selectedOptionId}`); // 상세 페이지로 이동
+    };
+
     // 선택된 카테고리 이름 가져오기
     const selectedCategoryName = selectedCategory
         ? categories.find(category => category.categoryId === selectedCategory)?.categoryName
@@ -215,7 +221,7 @@ const ProductList = () => {
                         const selectedOption = product.options.find(option => option.productOptionsId === selectedOptionId); // 선택된 옵션 객체
 
                         return (
-                            <ProductCard key={product.productId}> {/* 제품 카드 */}
+                            <ProductCard key={product.productId} onClick={() => handleProductClick(product.productId, selectedOptionId)}> {/* 제품 카드 */}
                                 <ProductImage src={`https://lovecloud-storage.s3.ap-northeast-2.amazonaws.com/images/${selectedOption.mainImages[0].imageName}`} alt={product.productName} /> {/* 제품 이미지 */}
                                 {/* <WishlistButton onClick={() => toggleWishlist(product.productId)}> */}
                                 {/*     <img src={product.isWishlisted ? SelectedHeart : UnselectedHeart} alt="찜" /> */}
@@ -223,7 +229,10 @@ const ProductList = () => {
                                 <ProductInfo> {/* 제품 정보 */}
                                     <ColorOptions> {/* 색상 옵션 */}
                                         {product.options.map(option => ( // 색상 옵션 반복 렌더링
-                                            <ColorOptionButton key={option.productOptionsId} color={option.color} isSelected={option.productOptionsId === selectedOptionId} onClick={() => handleColorChange(product.productId, option.productOptionsId)} />
+                                            <ColorOptionButton key={option.productOptionsId} color={option.color} isSelected={option.productOptionsId === selectedOptionId} onClick={(e) => {
+                                                e.stopPropagation(); // 부모 요소로의 클릭 이벤트 전파 중단
+                                                handleColorChange(product.productId, option.productOptionsId); // 색상 변경 처리
+                                            }} />
                                         ))}
                                     </ColorOptions>
                                     <ProductName>{product.productName}</ProductName> {/* 제품 이름 */}
