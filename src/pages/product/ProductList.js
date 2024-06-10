@@ -8,6 +8,7 @@ import ContentContainer from "../../components/ContentContainer";
 import { Title } from "../../components/Typography";
 import SelectedHeart from '../../assets/images/product/selected-heart.png';
 import UnselectedHeart from '../../assets/images/product/unselected-heart.png';
+import { BASE_URL, IMAGE_PREFIX } from "../../constants/global";
 
 // styled-components 정의
 const FilterContainer = styled.div`
@@ -147,7 +148,7 @@ const ProductList = () => {
     useEffect(() => {
         const fetchCategories = async () => { // 카테고리를 가져오는 함수 선언
             try {
-                const response = await axios.get('http://localhost:8080/categories'); // API 요청하여 카테고리 데이터 가져오기
+                const response = await axios.get('${BASE_URL}/categories'); // API 요청하여 카테고리 데이터 가져오기
                 setCategories(response.data); // 카테고리 상태 업데이트
             } catch (error) {
                 console.error('카테고리 가져올 때 에러 발생:', error); // 에러 발생 시 콘솔에 에러 메시지 출력
@@ -160,8 +161,8 @@ const ProductList = () => {
         const fetchProducts = async () => { // 제품을 가져오는 함수 선언
             try {
                 const endpoint = selectedCategory ?
-                    `http://localhost:8080/products?categoryId=${selectedCategory}` :
-                    'http://localhost:8080/products'; // 선택된 카테고리에 따라 엔드포인트 설정
+                    `${BASE_URL}/products?categoryId=${selectedCategory}` :
+                    '${BASE_URL}/products'; // 선택된 카테고리에 따라 엔드포인트 설정
                 const response = await axios.get(endpoint); // API 요청하여 제품 데이터 가져오기
                 setProducts(response.data.filter(product => product)); // 제품 상태 업데이트, null 값 필터링
             } catch (error) {
@@ -222,7 +223,7 @@ const ProductList = () => {
 
                         return (
                             <ProductCard key={product.productId} onClick={() => handleProductClick(product.productId, selectedOptionId)}> {/* 제품 카드 */}
-                                <ProductImage src={`https://lovecloud-storage.s3.ap-northeast-2.amazonaws.com/images/${selectedOption.mainImages[0].imageName}`} alt={product.productName} /> {/* 제품 이미지 */}
+                                <ProductImage src={`${IMAGE_PREFIX}${selectedOption.mainImages[0].imageName}`} alt={product.productName} /> {/* 제품 이미지 */}
                                 {/* <WishlistButton onClick={() => toggleWishlist(product.productId)}> */}
                                 {/*     <img src={product.isWishlisted ? SelectedHeart : UnselectedHeart} alt="찜" /> */}
                                 {/* </WishlistButton> */}

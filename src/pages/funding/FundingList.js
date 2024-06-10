@@ -8,6 +8,7 @@ import ContentContainer from "../../components/ContentContainer";
 import BackButtonIcon from '../../assets/images/back-button.png';
 import { TopContainer, BackButton, CenterTitle } from '../../components/Header/Header';
 import FundingCardComponent from '../../components/funding/FundingCardComponent';
+import { BASE_URL } from "../../constants/global";
 
 const FundingListContainer = styled.div`
 `;
@@ -20,7 +21,7 @@ const FundingList = () => {
     useEffect(() => {
         const fetchFundings = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/couples/${coupleId}/fundings`);
+                const response = await axios.get(`${BASE_URL}/couples/${coupleId}/fundings`);
                 setFundings(response.data);
             } catch (error) {
                 console.error('Error fetching fundings:', error);

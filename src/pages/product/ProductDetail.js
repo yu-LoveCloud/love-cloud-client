@@ -11,6 +11,7 @@ import { TopContainer, BackButton, CenterTitle } from "../../components/Header/H
 import BackButtonIcon from '../../assets/images/back-button.png';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { BASE_URL, IMAGE_PREFIX } from "../../constants/global";
 
 const ImageSlider = styled(Slider)`
     .slick-slide img {
@@ -112,7 +113,7 @@ const ProductDetailPage = () => {
 
     const fetchProductDetails = async (productOptionsId) => {
         try {
-            const response = await axios.get(`http://localhost:8080/items/${productOptionsId}`);
+            const response = await axios.get(`${BASE_URL}/items/${productOptionsId}`);
             setProduct(response.data);
             setSelectedColor(response.data.selectedOption.productOptionsId);
         } catch (error) {
@@ -153,7 +154,7 @@ const ProductDetailPage = () => {
                 <ImageSlider {...settings}>
                     {product.selectedOption.mainImages.map((image, index) => (
                         <div key={index}>
-                            <img src={`https://lovecloud-storage.s3.ap-northeast-2.amazonaws.com/images/${image.imageName}`} alt={`View ${index + 1}`} />
+                            <img src={`${IMAGE_PREFIX}${image.imageName}`} alt={`View ${index + 1}`} />
                         </div>
                     ))}
                 </ImageSlider>
@@ -175,7 +176,7 @@ const ProductDetailPage = () => {
                 <SectionTitle>상품 상세 정보</SectionTitle>
                 <DescriptionImagesContainer>
                     {product.selectedOption.descriptionImages.map((image, index) => (
-                        <DescriptionImage key={index} src={`https://lovecloud-storage.s3.ap-northeast-2.amazonaws.com/images/${image.imageName}`} alt={`Description ${index + 1}`} />
+                        <DescriptionImage key={index} src={`${IMAGE_PREFIX}${image.imageName}`} alt={`Description ${index + 1}`} />
                     ))}
                 </DescriptionImagesContainer>
                 <ButtonWrapper>
