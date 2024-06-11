@@ -7,7 +7,6 @@ import ContentContainer from '../../components/ContentContainer';
 import PurpleButton from '../../components/button/PurpleButton';
 import { Title } from "../../components/Typography";
 import { ButtonWrapper } from "../../components/button/ButtonWrapper";
-import { apiClient } from "../../api/apiClient";
 import axios from 'axios';
 
 const Input = styled.input`
@@ -54,36 +53,16 @@ function SignUp() {
         e.preventDefault();
         if (!checkPasswordsMatch()) return;
 
-        const endpoint = data.weddingRole === 'GUEST' ? '/auth/guest/sign-up' : '/auth/wedding-user/sign-up';
-        axios.post(endpoint, {
+        console.log(JSON.stringify({
             email: data.email,
-            name: data.name,
-            phoneNumber: data.phoneNumber,
-            password: data.password,
-            weddingRole: data.weddingRole
-        }, {
-            headers: {
-                'Content-Type' : 'application/json'
-            }
-        })
-        .then((res) => {
-            console.log(res.data);
-            alert("환영합니다!");
-            navigate('/loginform');
-        })
-        .catch((error) => {
-            if (error.response) {
-              if (error.status === 403) {
-                alert("주문 권한이 없습니다.");
-              } else {
-                alert("주문이 실패했습니다. " + error.response.data.message);
-              }
-            }
-          });
-    }
-       {/* if (data.weddingRole === 'GUEST') {
-            console.log(data.weddingRole);
-            apiClient.post('/auth/guest/sign-up', {
+                name: data.name,
+                phoneNumber: data.phoneNumber,
+                password: data.password,
+                weddingRole: data.weddingRole
+        }));
+
+        if(data.weddingRole === 'GUEST') {
+            axios.post('http://localhost:8080/auth/guest/sign-up', {
                 email: data.email,
                 name: data.name,
                 phoneNumber: data.phoneNumber,
@@ -94,22 +73,17 @@ function SignUp() {
                 }
             })
             .then((res) => {
-                console.log(res.data);
                 alert("환영합니다!");
                 navigate('/loginform');
             })
             .catch((error) => {
-                if (error.response) {
-                  if (error.status === 403) {
-                    alert("주문 권한이 없습니다.");
-                  } else {
-                    alert("주문이 실패했습니다. " + error.response.data.message);
-                  }
-                }
-              });
+                console.log("Error status:", error.response.status);
+                console.log("Error data:", error.response.data);
+                alert("다시 입력해주세요");
+            });
         }
         else {
-            apiClient.post('/auth/wedding-user/sign-up', {
+            axios.post('http://localhost:8080/auth/wedding-user/sign-up', {
                 email: data.email,
                 name: data.name,
                 phoneNumber: data.phoneNumber,
@@ -121,23 +95,17 @@ function SignUp() {
                 }
             })
             .then((res) => {
-                console.log(res.data);
                 alert("환영합니다!");
                 navigate('/loginform');
             })
             .catch((error) => {
-                if (error.response) {
-                  if (error.status === 403) {
-                    alert("주문 권한이 없습니다.");
-                  } else {
-                    alert("주문이 실패했습니다. " + error.response.data.message);
-                  }
-                }
-              });
+                console.log("Error status:", error.response.status);
+                console.log("Error data:", error.response.data);
+                alert("다시 입력해주세요");
+            });
         }
-
+        
     };
-    */}
 
     return (
         <AppContainer>
@@ -181,7 +149,7 @@ function SignUp() {
                     </div>
                     <div style={{ position: 'fixed', bottom: '24px', width: '300px' }}>
                         <ButtonWrapper>
-                            <PurpleButton as="button" type="submit" onSubmit={handleSignUp}>회원가입하기</PurpleButton>
+                            <PurpleButton as="button" type="submit" onClick={handleSignUp}>회원가입하기</PurpleButton>
                         </ButtonWrapper>
                     </div>
                 </form>

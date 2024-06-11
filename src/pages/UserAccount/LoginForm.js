@@ -71,7 +71,7 @@ function LoginForm() {
   };
 
   const login = () => {
-    axios.post('/auth/wedding-user/sign-in',
+    axios.post('http://localhost:8080/auth/wedding-user/sign-in',
       { email: data.email, password: data.password },
       {
       headers: {

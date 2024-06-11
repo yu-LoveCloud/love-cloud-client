@@ -30,28 +30,37 @@ const Unregister = styled.p`
 
 function MyPage() {
     const navigate = useNavigate();
-
-    const isAuthenticated = () => {
-        const accessToken = getCookie("accessToken");
-        return !!accessToken;
-    };
-
+    
+    // const isAuthenticated = () => {
+    //     const accessToken = getCookie("access_token");
+    //     return !!accessToken;
+    // };
+    const accessToken = getCookie("access_token");
+    
+    if(!accessToken) {
+        //navigate('/loginform');
+    }
     useEffect(() => {
-        if(!isAuthenticated()) {
-            navigate('/loginform');
-        }
-    }, [navigate]);
+        
+        console.log(accessToken);
+    })
+    // useEffect(() => {
+    // //     if(!isAuthenticated()) {
+    // //         navigate('/loginform');
+    // //     }
+    // // }, [navigate]);
 
     const handleLogout = () => {
-        const accessToken = getCookie("accessToken");
-        removeCookie("accessToken");
-        axios.post('/auth/sign-out', {}, {
+        const accessToken = getCookie("access_token");
+
+        axios.post('http://localhost:8080/auth/sign-out', {}, {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
         })
         .then(res => {
             console.log('Logged out successfully:', res.data);
+            removeCookie("access_token");
             navigate('/'); // 로그아웃 성공시 메인으로 이동
         })
         .catch(error => {
