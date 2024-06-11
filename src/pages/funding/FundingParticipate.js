@@ -108,7 +108,7 @@ const FundingParticipate = () => {
       .then((response) => {
         console.log("펀딩 참여 완료 성공:", response.data);
         alert("펀딩 참여가 완료되었습니다.");
-        navigate("/");
+        navigate(`/fundings/${fundingId}`);
       })
       .catch((error) => {
         console.error("펀딩 참여 완료 실패:", error);

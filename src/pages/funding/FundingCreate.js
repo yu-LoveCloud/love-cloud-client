@@ -98,9 +98,12 @@ const FundingCreate = () => {
         message: message,
         endDate: endDate,
       };
-      await apiClient.post(`/fundings`, requestBody);
+      const response = await apiClient.post(`/fundings`, requestBody);
       alert("펀딩이 성공적으로 생성되었습니다.");
-      navigate("/");
+
+      const location = response.headers.location;
+      console.log('Funding created at:', location);
+      navigate(location); 
     } catch (error) {
       console.error("Error creating funding:", error);
       alert("펀딩 생성에 실패했습니다.");
