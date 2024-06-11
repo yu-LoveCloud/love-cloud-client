@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { IMAGE_PREFIX } from "../../constants/global";
 
 const FundingCardWrapper = styled.div`
     display: flex;
@@ -79,7 +80,7 @@ const FundingCardComponent = ({ funding }) => {
     return (
         <FundingCardWrapper>
             <FundingImageWrapper>
-                <FundingImage src={`https://lovecloud-storage.s3.ap-northeast-2.amazonaws.com/images/${funding.productOptions.mainImages[0].imageName}`} alt={funding.title} />
+                <FundingImage src={`${IMAGE_PREFIX}${funding.productOptions.mainImages[0].imageName}`} alt={funding.title} />
                 <FundingDetails>
                     <FundingTitle>{funding.title}</FundingTitle>
                     <FundingInfo>{funding.participantCount}명 참여</FundingInfo>

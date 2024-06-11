@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { apiClient } from '../../api/apiClient';
 import styled from 'styled-components';
 import AppContainer from "../../components/AppContainer";
 import NavigationBar from "../../components/Nav/NavigationBar";
@@ -9,7 +9,7 @@ import PurpleButton from "../../components/button/PurpleButton";
 import BackButtonIcon from '../../assets/images/back-button.png';
 import { TopContainer, BackButton, CenterTitle } from '../../components/Header/Header';
 import { OrderedListContainer, ListItem, Input, TextArea } from "../../components/Typography";
-
+import { BASE_URL, IMAGE_PREFIX } from "../../constants/global";
 
 const ButtonWrapper = styled.div`
     padding-top: 0px;
@@ -71,7 +71,7 @@ const FundingCreate = () => {
     useEffect(() => {
         const fetchProductDetails = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/items/${productOptionsId}`);
+                const response = await apiClient.get(`${BASE_URL}/items/${productOptionsId}`);
                 setProduct(response.data);
             } catch (error) {
                 console.error('Error fetching product details:', error);
@@ -89,7 +89,7 @@ const FundingCreate = () => {
                 message: message,
                 endDate: endDate
             };
-            await axios.post('http://localhost:8080/fundings', requestBody);
+            await apiClient.post(`${BASE_URL}/fundings`, requestBody);
             alert('펀딩이 성공적으로 생성되었습니다.');
             navigate('/');
         } catch (error) {
@@ -110,7 +110,7 @@ const FundingCreate = () => {
                 </TopContainer>
                 <ProductInfoTitle>상품 정보</ProductInfoTitle>
                 <ProductInfoContainer>
-                    <ProductImage src={`https://lovecloud-storage.s3.ap-northeast-2.amazonaws.com/images/${product.selectedOption.mainImages[0].imageName}`} alt={product.productName} />
+                    <ProductImage src={`${IMAGE_PREFIX}${product.selectedOption.mainImages[0].imageName}`} alt={product.productName} />
                     <ProductDetails>
                         <ProductName>{product.productName}</ProductName>
                         <ProductPrice>₩{product.selectedOption.price.toLocaleString()}</ProductPrice>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { apiClient } from '../../api/apiClient';
 import styled from 'styled-components';
 import AppContainer from "../../components/AppContainer";
@@ -10,30 +10,49 @@ import { TopContainer, BackButton, CenterTitle } from '../../components/Header/H
 import FundingCardComponent from '../../components/funding/FundingCardComponent';
 import { BASE_URL } from "../../constants/global";
 
-const FundingListContainer = styled.div`
-`;
+const FundingListContainer = styled.div``;
 
-const FundingList = () => {
+const UserFundingList = () => {
     const navigate = useNavigate();
-    const { coupleId } = useParams(); // coupleId 파라미터를 받아옴
     const [fundings, setFundings] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchFundings = async () => {
+        const fetchUserFundings = async () => {
             try {
-                const response = await apiClient.get(`${BASE_URL}/couples/${coupleId}/fundings`);
-                setFundings(response.data);
+                // 1. 사용자 정보 요청
+                const userResponse = await apiClient.get(`${BASE_URL}/user/me`);
+                const { coupleId } = userResponse.data;
+
+                if (!coupleId) {
+                    throw new Error("커플이 없습니다.");
+                }
+
+                // 2. 커플의 펀딩 목록 요청
+                const fundingsResponse = await apiClient.get(`${BASE_URL}/couples/${coupleId}/fundings`);
+                setFundings(fundingsResponse.data);
             } catch (error) {
-                console.error('Error fetching fundings:', error);
+                setError(error.message);
+            } finally {
+                setLoading(false);
             }
         };
 
-        fetchFundings();
-    }, [coupleId]);
+        fetchUserFundings();
+    }, []);
 
     const handleCardClick = (fundingId) => {
         navigate(`/fundings/${fundingId}`);
     };
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error) {
+        return <div>Error: {error}</div>;
+    }
 
     return (
         <AppContainer>
@@ -41,7 +60,7 @@ const FundingList = () => {
             <ContentContainer>
                 <TopContainer>
                     <BackButton src={BackButtonIcon} alt="Back" onClick={() => navigate(-1)} />
-                    <CenterTitle>현재 진행 중인 펀딩</CenterTitle>
+                    <CenterTitle>내 커플의 펀딩 목록</CenterTitle>
                 </TopContainer>
                 <FundingListContainer>
                     {fundings.map((funding) => (
@@ -55,4 +74,4 @@ const FundingList = () => {
     );
 }
 
-export default FundingList;
+export default UserFundingList;
