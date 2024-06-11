@@ -17,18 +17,16 @@ import OrderCreateProcess2 from "./pages/orderManagement/OrderCreateProcess2";
 import OrderCreateProcess1 from "./pages/orderManagement/OrderCreateProcess1";
 import ProductList from "./pages/product/ProductList";
 import ProductDetail from "./pages/product/ProductDetail";
-import FundingCreate from './pages/funding/FundingCreate';
-import FundingList from './pages/funding/FundingList';
-import FundingDetail from './pages/funding/FundingDetail';
-import FundingParticipate from './pages/funding/FundingParticipate';
+import FundingCreate from "./pages/funding/FundingCreate";
+import FundingList from "./pages/funding/FundingList";
+import FundingDetail from "./pages/funding/FundingDetail";
+import FundingParticipate from "./pages/funding/FundingParticipate";
 import UserFundingList from "./pages/funding/UserFundingList";
-
-
 
 function Router() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path="/" element={<ProductList />} />
       <Route path="/loginform" element={<LoginForm />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/invitations" element={<InvitationDashboard />} />
@@ -50,11 +48,17 @@ function Router() {
 
       <Route path="/products" element={<ProductList />} />
       <Route path="/items/:productOptionsId" element={<ProductDetail />} />
-      <Route path="/funding/create/:productOptionsId" element={<FundingCreate />} />
+      <Route
+        path="/funding/create/:productOptionsId"
+        element={<FundingCreate />}
+      />
       <Route path="/user/fundings" element={<UserFundingList />} />
       <Route path="/couples/:coupleId/fundings" element={<FundingList />} />
       <Route path="/fundings/:fundingId" element={<FundingDetail />} />
-      <Route path="/fundings/:fundingId/participate" element={<FundingParticipate />} />
+      <Route
+        path="/fundings/:fundingId/participate"
+        element={<FundingParticipate />}
+      />
 
       <Route path="/orders/:orderId" element={<DetailOrder />} />
       <Route path="/orders" element={<ListOrder />} />
