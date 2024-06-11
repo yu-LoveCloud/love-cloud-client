@@ -81,6 +81,13 @@ export const TextArea = styled(Input).attrs({ as: "textarea" })`
   padding: 12px; /* padding 추가 */
 `;
 
+export const SectionTitle = styled.div`
+  font-size: 16px;
+  font-weight: bold;
+  font-family: "Pretendard";
+  margin: 20px 0 20px;
+`;
+
 export const Hr = styled.hr`
   border: 1px solid #f2f2f2;
   margin: 1em 0;
