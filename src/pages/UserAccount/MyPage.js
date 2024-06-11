@@ -6,6 +6,7 @@ import NavigationBar from '../../components/Nav/NavigationBar';
 import ContentContainer from '../../components/ContentContainer';
 import WhiteButton from '../../components/button/WhiteButton';
 import { Title } from "../../components/Typography";
+import { ButtonWrapper } from '../../components/button/ButtonWrapper';
 
 const Menu = styled.div`
   margin-top: 50px;
@@ -17,14 +18,6 @@ const MenuList = styled.div`
   padding: 10px;
 `;
 
-const ButtonWrapper = styled.div`
-  width: 352px;
-  padding-top: 0px;
-  padding-bottom: 0px;
-  position: fixed;
-  bottom: 80px;
-`;
-
 const Unregister = styled.p`
   position: fixed;
   bottom: 30px;
@@ -34,38 +27,13 @@ const Unregister = styled.p`
 `;
 
 function MyPage() {
-    const [user, setUser] = useState(null);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-    useEffect(() => {
-        const checkUserLoggedIn = async () => {
-            try {
-                const response = await fetch('http://localhost:3001/users');
-                if (!response.ok) {
-                    setIsLoggedIn(false);
-                    return;
-                }
-                const userData = await response.json();
-                setUser(userData[0]);
-                setIsLoggedIn(true);
-            } catch (error) {
-                console.error('사용자 정보를 가져오는 중 오류 발생', error);
-                setIsLoggedIn(false);
-            }
-        };
-        checkUserLoggedIn();
-    }, []);
-
-    if (!isLoggedIn) {
-        return <Link to="/loginform">로그인</Link>;
-    }
-
+    
     return (
         <AppContainer>
             <NavigationBar />
             <ContentContainer>
                 <Title>마이페이지</Title>
-                <p>{user ? `${user.name}님` : '사용자 정보를 불러오는 중...'}</p>
+
                 <Menu>
                     <MenuList>
                         <Link to='/' style={{color: 'inherit' , textDecoration: 'none' }}>내 정보 관리</Link>
@@ -80,7 +48,7 @@ function MyPage() {
                         <Link to='/' style={{color: 'inherit' , textDecoration: 'none' }}>환불 계좌 등록하기</Link>
                     </MenuList>
                     <MenuList>
-                        <Link to='/' style={{color: 'inherit' , textDecoration: 'none' , borderBottom: '2px solid #DFDFDF' , padding: '10px'}}>배송지 관리하기</Link>
+                        <Link to='/' style={{color: 'inherit' , textDecoration: 'none'}}>배송지 관리하기</Link>
                     </MenuList>
                 </Menu>
                 <ButtonWrapper>

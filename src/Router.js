@@ -10,6 +10,7 @@ import RefundAccount from "./pages/UserAccount/RefundAccount";
 import PartnerConnect from "./pages/Partner/PartnerConnect";
 import ConnectCode from "./pages/Partner/ConnectCode";
 import MyPage from "./pages/UserAccount/MyPage";
+import PracLogin from "./pages/UserAccount/PracLogin";
 
 function Router() {
   return (
@@ -31,6 +32,7 @@ function Router() {
       <Route path="/partnerconnect" element={<PartnerConnect />} />
       <Route path="/connectcode" element={<ConnectCode />} />
       <Route path="/mypage" element={<MyPage />} />
+      <Route path="/praclogin" element={<PracLogin />} />
     </Routes>
   );
 }

@@ -6,6 +6,7 @@ import NavigationBar from '../../components/Nav/NavigationBar';
 import ContentContainer from '../../components/ContentContainer';
 import PurpleButton from '../../components/button/PurpleButton';
 import WhiteButton from '../../components/button/WhiteButton';
+import { ButtonWrapper } from '../../components/button/ButtonWrapper';
 
 const Title = styled.h2`
   color: #000000;
@@ -29,14 +30,6 @@ const Code = styled.h4`
   text-align: center;
   margin-top: 0px;
   width: 100%;
-`;
-
-const ButtonWrapper = styled.div`
-  padding-top: 0px;
-  padding-bottom: 0px;
-  position: fixed;
-  bottom: 24px;
-  width: 352px;
 `;
 
 function PartnerConnect() {

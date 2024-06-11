@@ -58,7 +58,7 @@ function SignUp() {
             return; // 비밀번호 불일치 시 함수 종료
         }
         try {
-            const response = await fetch('http://localhost:3001/api/signup', {
+            const response = await fetch('/auth/wedding-user/sign-up', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
