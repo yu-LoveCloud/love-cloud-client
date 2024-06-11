@@ -71,9 +71,17 @@ export const Input = styled.input`
   padding: 0 12px;
   font-size: 12px;
   font-family: "Pretendard";
+  &::placeholder {
+    color: #c4c4c4;
+  }
 `;
 export const TextArea = styled(Input).attrs({ as: "textarea" })`
   height: 200px; /* textarea에 맞는 크기 */
   resize: none; /* 크기 조절 비활성화 */
   padding: 12px; /* padding 추가 */
+`;
+
+export const Hr = styled.hr`
+  border: 1px solid #f2f2f2;
+  margin: 1em 0;
 `;
