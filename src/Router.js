@@ -9,6 +9,9 @@ import DetailOrder from "./pages/orderManagement/DetailOrder";
 import ListOrder from "./pages/orderManagement/ListOrder";
 import OrderCreateProcess2 from "./pages/orderManagement/OrderCreateProcess2";
 import OrderCreateProcess1 from "./pages/orderManagement/OrderCreateProcess1";
+import ProductList from "./pages/product/ProductList";
+import ProductDetail from "./pages/product/ProductDetail";
+import FundingParticipation from "./pages/funding/FundingParticipation";
 
 function Router() {
   return (
@@ -29,6 +32,12 @@ function Router() {
       <Route path="/orders" element={<ListOrder />} />
       <Route path="/orders/create-process1" element={<OrderCreateProcess1 />} />
       <Route path="/orders/create-process2" element={<OrderCreateProcess2 />} />
+      <Route path="/products" element={<ProductList />} />
+      <Route path="/items/:productOptionsId" element={<ProductDetail />} />
+      <Route
+        path="/funding/create/:productOptionsId"
+        element={<FundingParticipation />}
+      />
     </Routes>
   );
 }
