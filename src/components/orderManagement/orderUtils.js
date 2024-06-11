@@ -13,6 +13,20 @@ export const getDeliveryStatusText = (status) => {
   }
 };
 
+// 상태를 한글 문자열로 매핑하는 함수
+export const getOrderStatusText = (status) => {
+  switch (status) {
+    case "ORDER_PLACED":
+      return "주문 완료";
+    case "CANCEL_REQUESTED":
+      return "취소 요청됨";
+    case "CANCEL_COMPLETED":
+      return "취소 완료";
+    default:
+      return "알 수 없음";
+  }
+};
+
 export const formatDate = (date) => {
   const formattedDate = new Date(date);
   return `${formattedDate.getFullYear()}년 ${

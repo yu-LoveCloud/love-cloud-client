@@ -28,3 +28,13 @@ export const createOrder = async (orderData) => {
     throw error;
   }
 };
+
+export const getOrderList = async () => {
+  try {
+    const response = await apiClient.get("/orders");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching order list:", error);
+    throw error;
+  }
+};
