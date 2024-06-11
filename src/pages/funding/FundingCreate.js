@@ -60,7 +60,7 @@ const ProductPrice = styled.div`
     color: #666;
 `;
 
-const FundingParticipation = () => {
+const FundingCreate = () => {
     const navigate = useNavigate();
     const { productOptionsId } = useParams();
     const [product, setProduct] = useState(null);
@@ -145,4 +145,4 @@ const FundingParticipation = () => {
     );
 };
 
-export default FundingParticipation;
+export default FundingCreate;
