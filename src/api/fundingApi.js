@@ -10,3 +10,13 @@ export const getFundingList = async () => {
     throw error;
   }
 };
+
+export const getOrderableFundingList = async () => {
+  try {
+    const response = await apiClient.get("/orderable-fundings");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching orderable funding list:", error);
+    throw error;
+  }
+};
