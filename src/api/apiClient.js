@@ -68,7 +68,7 @@ apiClient.interceptors.response.use(
             console.error("Failed to refresh token", tokenRefreshError);
             removeCookie("access_token");
             removeCookie("refresh_token");
-            window.location.href = "/login"; // 로그인 페이지로 이동
+            window.location.href = "/loginform"; // 로그인 페이지로 이동
             return Promise.reject(tokenRefreshError);
           }
         } else {

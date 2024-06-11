@@ -1,14 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from "styled-components";
 import AppContainer from "../../components/AppContainer";
-import NavigationBar from '../../components/NavigationBar';
-
-const Title = styled.h2`
-  color: #4C3073;
-  padding-top: 40px;
-  margin-top: auto;
-`;
+import NavigationBar from '../../components/Nav/NavigationBar';
+import ContentContainer from '../../components/ContentContainer';
+import { Title } from "../../components/Typography";
+import axios from "axios";
+import { setCookie } from '../../Cookie';
 
 const Input = styled.input`
   width: 100%;
@@ -60,42 +58,55 @@ const SnsButton = styled.button`
   padding : 0;
 `;
 
-function LoginForm({ children, onClick }) {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
+function LoginForm() {
+  const [data, setData] = useState({ email: '', password: '' });
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-    const handleEmailChange = (event) => {
-        setEmail(event.target.value);
-    };
+  const handleChange = e => {
+      setData({
+          ...data,
+          [e.target.name]: e.target.value.trim()
+      });
+  };
 
-    const handlePasswordChange = (event) => {
-        setPassword(event.target.value);
-    };
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        try {
-            const response = await fetch('서버 API?email=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password));
-            const data = await response.json();
-            if (data.length > 0) {
-                setError('');
-            } else {
-                setError('이메일 또는 비밀번호가 일치하지 않습니다.');
-            }
-        } catch (error) {
-            console.error('Error during login:', error);
-            setError('로그인 중 에러가 발생했습니다.');
+  const login = () => {
+    axios.post('http://localhost:8080/auth/wedding-user/sign-in',
+      { email: data.email, password: data.password },
+      {
+      headers: {
+          'Content-Type': 'application/json'
+      }
+  })
+      .then(res => {
+        const accessToken = res.data ? res.data.access_token : null;
+        const refreshToken = res.data ? res.data.refresh_token : null;
+        if (accessToken) {
+          setCookie("access_token", accessToken, { path: '/' });
+          setCookie("refresh_token", refreshToken, { path: '/' });
+          setError('');
+          alert("로그인 되었습니다.");
+          navigate("/");
+        } else {
+          alert(res.data.message);
+          setError(res.data.message || "로그인 실패");
         }
-    };
+      })
+      .catch(error => {
+        console.error('Login error:', error.response ? error.response.data.message : error.message);
+        setError('로그인 중 에러가 발생했습니다.');
+      });
+  };
 
     const handleGoogleLogin = () => {
+      {/*
         const clientId = '';
         const redirectUri = '';
         const scope = '';
         const url = '';
 
         window.location.href = url;
+        */}
     };
 
     const handleKakaoLogin = () => {
@@ -107,32 +118,34 @@ function LoginForm({ children, onClick }) {
     };
 
     return (
-       <>
-       <NavigationBar />
-       <form onSubmit={handleSubmit}>
-       <AppContainer>
+        <AppContainer>
+        <NavigationBar />
+        <ContentContainer>
+        <form onSubmit={(e) => { e.preventDefault(); login(); }}>
                <div style={{ width: '100%', textAlign: 'center' }}>
                    <Title>LOVE CLOUD</Title>
                </div>
                <div>
                    <h4 style={{ marginTop: '59px', marginBottom: '4px' }}>이메일</h4>
-                   <Input type="email" value={email} onChange={handleEmailChange} />
+                   <Input name="email" type="email" value={data.email} onChange={handleChange} />
                </div>
                <div>
                    <h4 style={{ marginTop: '34px', marginBottom: '4px' }}>비밀번호</h4>
                    <Input
+                       name="password"
                        type="password"
-                       value={password}
-                       onChange={handlePasswordChange}
+                       value={data.password}
+                       onChange={handleChange}
                        style={{ marginBottom: '20px' }}
                    />
-               </div>
-               <LoginButtonWrapper>
-                    <LoginButton onClick={onClick}>{children}로그인</LoginButton>
+                </div>
+                <LoginButtonWrapper>
+                  <LoginButton type='button' onClick={login}>로그인</LoginButton>
                 </LoginButtonWrapper>
+        </form>
                {error && <ErrorMessage>{error}</ErrorMessage>}
                <div style ={{ fontSize : 'small' , display : 'flex', justifyContent : 'space-between' }}>
-                <h4 style = {{ width : '150px'}}>비밀번호를 잊어버리셨나요?</h4>
+                <h4 style = {{ width : '150px'}}><Link to="/changepassword" style = {{ textDecoration : 'none' , color : 'inherit' }}>비밀번호를 잊어버리셨나요?</Link></h4>
                 <h4 style = {{ width : '50px'}}> <Link to="/signup" style = {{ textDecoration : 'none' , color : 'inherit' }}>회원가입</Link></h4>
                </div>
                <div style ={{ display : 'flex' , justifyContent : 'space-between' }}>
@@ -140,15 +153,15 @@ function LoginForm({ children, onClick }) {
                     <SnsImg src='/images/GoogleLogin.jpg' alt='' />
                 </SnsButton>
                 <SnsButton onClick={handleKakaoLogin}>
-                    <SnsImg src='/images/KakaoLogin.jpg' alt='' />
+                    <SnsImg src='/images/KakaoLogin.png' alt='' />
                 </SnsButton>
                 <SnsButton onClick={handleNaverLogin}>
-                    <SnsImg src='/images/NaverLogin.jpg' alt='' />
+                    <SnsImg src='/images/NaverLogin.png' alt='' />
                 </SnsButton>
                </div>
-           </AppContainer>
-       </form>
-       </>
+        </ContentContainer>
+      </AppContainer>
+       
     );
 }
 

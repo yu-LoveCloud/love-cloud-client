@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { ReactComponent as MenuIcon } from "../../assets/images/menu-icon.svg";
 import { ReactComponent as MypageIcon } from "../../assets/images/mypage-icon.svg";
+import { Link } from "react-router-dom";
 
 const NavBar = styled.nav`
   background-color: #ffffff;
@@ -31,7 +32,9 @@ function NavigationBar() {
       <IconButton>
         <MenuIcon />
       </IconButton>
-      <Logo>LOVE CLOUD</Logo>
+      <Link to="/" style={{ color: 'inherit' , textDecoration : 'none' }}>
+        <Logo>LOVE CLOUD</Logo>
+      </Link>
       <IconButton>
         <MypageIcon />
       </IconButton>

@@ -9,9 +9,14 @@ import ContentContainer from "../../components/ContentContainer";
 import PurpleButton from "../../components/button/PurpleButton";
 import { TopContainer, BackButton, CenterTitle } from "../../components/Header/Header";        
 import BackButtonIcon from '../../assets/images/back-button.png';
+<<<<<<< HEAD
+// import "slick-carousel/slick/slick.css";
+// import "slick-carousel/slick/slick-theme.css";
+=======
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { BASE_URL, IMAGE_PREFIX } from "../../constants/global";
+>>>>>>> 287e27e8ad19d4dcd584f08dcd60bbdee5f4a488
 
 const ImageSlider = styled(Slider)`
     .slick-slide img {
