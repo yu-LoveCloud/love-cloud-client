@@ -70,15 +70,23 @@ function LoginForm() {
       });
   };
 
-  const login = (e) => {
-    axios.post('/auth/wedding-user/sign-in', { email: data.email, password: data.password })
+  const login = () => {
+    axios.post('/auth/wedding-user/sign-in',
+      { email: data.email, password: data.password },
+      {
+      headers: {
+          'Content-Type': 'application/json'
+      }
+  })
       .then(res => {
-        console.log(res.data);
-        const accessToken = res.data.data ? res.data.data.access_token : null;
+        const accessToken = res.data ? res.data.access_token : null;
+        const refreshToken = res.data ? res.data.refresh_token : null;
         if (accessToken) {
           setCookie("access_token", accessToken, { path: '/' });
+          setCookie("refresh_token", refreshToken, { path: '/' });
+          setError('');
           alert("로그인 되었습니다.");
-          return navigate("/");
+          navigate("/");
         } else {
           alert(res.data.message);
           setError(res.data.message || "로그인 실패");
@@ -91,12 +99,14 @@ function LoginForm() {
   };
 
     const handleGoogleLogin = () => {
+      {/*
         const clientId = '';
         const redirectUri = '';
         const scope = '';
         const url = '';
 
         window.location.href = url;
+        */}
     };
 
     const handleKakaoLogin = () => {

@@ -62,7 +62,6 @@ function PracLogin() {
     const login = (e) => {
       axios.post('/auth/wedding-user/sign-in', { email: data.email, password: data.password })
         .then(res => {
-          console.log(res.data);
           const accessToken = res.data.data ? res.data.data.access_token : null;
           if (accessToken) {
             setCookie("access_token", accessToken, { path: '/' });
