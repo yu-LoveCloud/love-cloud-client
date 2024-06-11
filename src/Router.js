@@ -6,6 +6,9 @@ import SignUp from "./pages/UserAccount/SignUp";
 import InvitationCreateProcess1 from "./pages/invitation/InvitationCreateProcess1";
 import InvitationCreateProcess2 from "./pages/invitation/InvitationCreateProcess2";
 import DetailOrder from "./pages/orderManagement/DetailOrder";
+import ProductList from "./pages/product/ProductList";
+import ProductDetail from "./pages/product/ProductDetail";
+import FundingParticipation from "./pages/funding/FundingParticipation";
 
 function Router() {
   return (
@@ -23,6 +26,12 @@ function Router() {
         element={<InvitationCreateProcess2 />}
       />
       <Route path="/orders/:orderId" element={<DetailOrder />} />
+      <Route path="/products" element={<ProductList />} />
+      <Route path="/items/:productOptionsId" element={<ProductDetail />} />
+      <Route
+        path="/funding/create/:productOptionsId"
+        element={<FundingParticipation />}
+      />
     </Routes>
   );
 }
