@@ -5,6 +5,7 @@ import AppContainer from "../../components/AppContainer";
 import NavigationBar from '../../components/Nav/NavigationBar';
 import ContentContainer from '../../components/ContentContainer';
 import PurpleButton from '../../components/button/PurpleButton';
+import { ButtonWrapper } from '../../components/button/ButtonWrapper';
 
 const Title = styled.h2`
   color: #000000;
@@ -21,14 +22,6 @@ const Code = styled.h1`
   text-align: center;
   font-size: 12pt;
   cursor: pointer;
-`;
-
-const ButtonWrapper = styled.div`
-  padding-top: 0px;
-  padding-bottom: 0px;
-  position: fixed;
-  bottom: 10px;
-  width: 100%;
 `;
 
 const CodeContainer = styled.div`

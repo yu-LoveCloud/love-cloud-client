@@ -6,4 +6,6 @@ export const ButtonWrapper = styled.div`
   position: absolute;
   bottom: 10px;
   width: calc(100%-48px);
+  left: 24px;
+  right: 24px;
 `;
