@@ -15,7 +15,7 @@ import {
 import BackButtonIcon from "../../assets/images/back-button.png";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { BASE_URL, IMAGE_PREFIX } from "../../constants/global";
+import { IMAGE_PREFIX } from "../../constants/global";
 
 const ImageSlider = styled(Slider)`
   .slick-slide img {
@@ -106,7 +106,7 @@ const ProductDetailPage = () => {
 
   const settings = {
     dots: true,
-    infinite: true,
+    infinite: false,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -117,9 +117,7 @@ const ProductDetailPage = () => {
 
   const fetchProductDetails = async (productOptionsId) => {
     try {
-      const response = await apiClient.get(
-        `${BASE_URL}/items/${productOptionsId}`
-      );
+      const response = await apiClient.get(`/items/${productOptionsId}`);
       setProduct(response.data);
       setSelectedColor(response.data.selectedOption.productOptionsId);
     } catch (error) {
