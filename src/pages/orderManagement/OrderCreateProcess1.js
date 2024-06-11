@@ -1,5 +1,4 @@
-import { getFundingList } from "../../api/fundingApi";
-import { getItem } from "../../api/productApi";
+import { getOrderableFundingList } from "../../api/fundingApi";
 import AppContainer from "../../components/AppContainer";
 import ContentContainer from "../../components/ContentContainer";
 import NavigationBar from "../../components/Nav/NavigationBar";
@@ -16,51 +15,32 @@ function OrderCreateProcess1() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchFundings = async () => {
-      try {
-        // 1. getFundingList를 호출하여 펀딩 리스트를 가져옵니다.
-        const fundingsList = await getFundingList();
+  const fetchFundings = async () => {
+    try {
+      // 1. getOrderableFundingList를 호출하여 펀딩 리스트를 가져옵니다.
+      const data = await getOrderableFundingList();
 
-        if (Array.isArray(fundingsList)) {
-          // 2. fundingsList에서 COMPLETED 상태인 펀딩만 필터링합니다.
-          const completedFundings = fundingsList.filter(
-            (funding) => funding.status === "COMPLETED"
-          );
+      // 2. 펀딩 리스트를 가공합니다.
+      const fundingList = data.map((funding) => {
+        return {
+          ...funding,
+          mainImages: funding.mainImages.map((image) => image.imageName),
+        };
+      });
 
-          // 3. 각 펀딩에 대해 items/productOptionsId를 호출하여 상품 정보를 가져옵니다.
-          const fundingDetails = await Promise.all(
-            completedFundings.map(async (funding) => {
-              const productOptionsId = funding.productOptions.productOptionsId;
-              const productData = await getItem(productOptionsId);
-
-              // 4. 새로운 객체를 생성합니다.
-              return {
-                fundingId: funding.fundingId,
-                productName: productData.productName,
-                productId: productData.productId,
-                fundingTitle: funding.title,
-                modelName: productData.selectedOption.modelName,
-                price: productData.selectedOption.price,
-                mainImages: funding.productOptions.mainImages,
-              };
-            })
-          );
-
-          // 5. 결과를 상태로 설정합니다.
-          setFundings(fundingDetails);
-
-          // 최종 결과 확인
-          console.log("fundingDetails:", fundingDetails);
-        } else {
-          setError("펀딩 정보를 가져오는데 실패했습니다.");
-        }
-      } catch (error) {
+      // 3. 상태에 설정합니다.
+      setFundings(fundingList);
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        setError("권한이 없습니다.");
+      } else {
         setError(`펀딩 정보를 가져오는데 실패했습니다.: ${error.message}`);
-        console.error("Error fetching fundings:", error);
       }
-    };
+      console.error("Error fetching fundings:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchFundings();
   }, []);
 
