@@ -44,10 +44,6 @@ function Router() {
       <Route path="/orders" element={<ListOrder />} />
       <Route path="/orders/create-process1" element={<OrderCreateProcess1 />} />
       <Route path="/orders/create-process2" element={<OrderCreateProcess2 />} />
-      <Route path="/products" element={<ProductList />} />
-      <Route path="/items/:productOptionsId" element={<ProductDetail />} />
-      <Route path="/funding/create/:productOptionsId" element={<FundingCreate />} />
-      <Route path="/couples/:coupleId/fundings" element={<FundingList />} />
     </Routes>
   );
 }
