@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { apiClient } from '../../api/apiClient';
 import styled from 'styled-components';
 import AppContainer from "../../components/AppContainer";
 import NavigationBar from "../../components/Nav/NavigationBar";
@@ -10,6 +10,7 @@ import PurpleButton from "../../components/button/PurpleButton";
 import { TopContainer, BackButton, CenterTitle } from '../../components/Header/Header';
 import FundingCardComponent from '../../components/funding/FundingCardComponent';
 import GuestFundingComponent from '../../components/funding/GuestFundingComponent';
+import { BASE_URL } from "../../constants/global";
 
 const FundingDetail = () => {
     const navigate = useNavigate();
@@ -20,7 +21,7 @@ const FundingDetail = () => {
     useEffect(() => {
         const fetchFunding = async () => {
             try {
-                const fundingResponse = await axios.get(`http://localhost:8080/fundings/${fundingId}`);
+                const fundingResponse = await apiClient.get(`${BASE_URL}/fundings/${fundingId}`);
                 setFunding(fundingResponse.data);
             } catch (error) {
                 console.error('Error fetching funding:', error);
@@ -29,7 +30,7 @@ const FundingDetail = () => {
 
         const fetchGuestFunding = async () => {
             try {
-                const guestFundingResponse = await axios.get(`http://localhost:8080/fundings/${fundingId}/guest-fundings`);
+                const guestFundingResponse = await apiClient.get(`${BASE_URL}/${fundingId}/guest-fundings`);
                 setGuestFunding(guestFundingResponse.data);
             } catch (error) {
                 console.error('Error fetching guest fundings:', error);
