@@ -31,40 +31,52 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // 401 에러 및 만료된 액세스 토큰일 경우
-    if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      try {
-        const refreshToken = getCookie("refresh_token");
-        if (!refreshToken) {
-          throw new Error("No refresh token available");
-        }
+    // error.response가 정의되어 있는지 확인
+    if (error.response) {
+      const status = error.response.status;
+      const msg = error.response.data.msg;
 
-        const response = await axios.post(
-          `${BASE_URL}/auth/refresh-token`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${refreshToken}`,
-            },
+      // 401 에러 및 만료된 액세스 토큰일 경우
+      if (status === 401 && !originalRequest._retry) {
+        originalRequest._retry = true;
+        if (msg === "Expired Access Token. 토큰이 만료되었습니다") {
+          try {
+            const refreshToken = getCookie("refresh_token");
+            if (!refreshToken) {
+              throw new Error("No refresh token available");
+            }
+
+            const response = await axios.post(
+              `${BASE_URL}/auth/refresh-token`,
+              {},
+              {
+                headers: {
+                  Authorization: `Bearer ${refreshToken}`,
+                },
+              }
+            );
+
+            const newAccessToken = response.data.accessToken;
+            const newRefreshToken = response.data.refreshToken;
+
+            setCookie("access_token", newAccessToken, { path: "/" });
+            setCookie("refresh_token", newRefreshToken, { path: "/" });
+
+            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+            return apiClient(originalRequest);
+          } catch (tokenRefreshError) {
+            console.error("Failed to refresh token", tokenRefreshError);
+            removeCookie("access_token");
+            removeCookie("refresh_token");
+            window.location.href = "/login"; // 로그인 페이지로 이동
+            return Promise.reject(tokenRefreshError);
           }
-        );
-
-        const newAccessToken = response.data.accessToken;
-        const newRefreshToken = response.data.refreshToken;
-
-        setCookie("access_token", newAccessToken, { path: "/" });
-        setCookie("refresh_token", newRefreshToken, { path: "/" });
-
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return axios(originalRequest);
-      } catch (tokenRefreshError) {
-        console.error("Failed to refresh token", tokenRefreshError);
-        removeCookie("access_token");
-        removeCookie("refresh_token");
-
-        return Promise.reject(tokenRefreshError);
+        } else {
+          console.error("Authorization error: ", msg);
+        }
       }
+    } else {
+      console.error("Error response is undefined", error);
     }
 
     return Promise.reject(error);
