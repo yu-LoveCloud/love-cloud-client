@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { apiClient } from '../../api/apiClient';
 import styled from 'styled-components';
 import AppContainer from "../../components/AppContainer";
 import NavigationBar from "../../components/Nav/NavigationBar";
@@ -22,7 +22,7 @@ const UserFundingList = () => {
         const fetchUserFundings = async () => {
             try {
                 // 1. 사용자 정보 요청
-                const userResponse = await axios.get(`${BASE_URL}/user/me`);
+                const userResponse = await apiClient.get(`${BASE_URL}/user/me`);
                 const { coupleId } = userResponse.data;
 
                 if (!coupleId) {
@@ -30,7 +30,7 @@ const UserFundingList = () => {
                 }
 
                 // 2. 커플의 펀딩 목록 요청
-                const fundingsResponse = await axios.get(`${BASE_URL}/couples/${coupleId}/fundings`);
+                const fundingsResponse = await apiClient.get(`${BASE_URL}/couples/${coupleId}/fundings`);
                 setFundings(fundingsResponse.data);
             } catch (error) {
                 setError(error.message);

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { apiClient } from '../../api/apiClient';
 import styled from 'styled-components';
 import AppContainer from "../../components/AppContainer";
 import NavigationBar from "../../components/Nav/NavigationBar";
@@ -21,7 +21,7 @@ const FundingList = () => {
     useEffect(() => {
         const fetchFundings = async () => {
             try {
-                const response = await axios.get(`${BASE_URL}/couples/${coupleId}/fundings`);
+                const response = await apiClient.get(`${BASE_URL}/couples/${coupleId}/fundings`);
                 setFundings(response.data);
             } catch (error) {
                 console.error('Error fetching fundings:', error);

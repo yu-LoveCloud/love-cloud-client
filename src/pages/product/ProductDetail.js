@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { apiClient } from '../../api/apiClient';
 import styled from 'styled-components';
 import Slider from 'react-slick';
 import AppContainer from "../../components/AppContainer";
@@ -113,7 +113,7 @@ const ProductDetailPage = () => {
 
     const fetchProductDetails = async (productOptionsId) => {
         try {
-            const response = await axios.get(`${BASE_URL}/items/${productOptionsId}`);
+            const response = await apiClient.get(`${BASE_URL}/items/${productOptionsId}`);
             setProduct(response.data);
             setSelectedColor(response.data.selectedOption.productOptionsId);
         } catch (error) {

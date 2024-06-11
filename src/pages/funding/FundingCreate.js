@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { apiClient } from '../../api/apiClient';
 import styled from 'styled-components';
 import AppContainer from "../../components/AppContainer";
 import NavigationBar from "../../components/Nav/NavigationBar";
@@ -71,7 +71,7 @@ const FundingCreate = () => {
     useEffect(() => {
         const fetchProductDetails = async () => {
             try {
-                const response = await axios.get(`${BASE_URL}/items/${productOptionsId}`);
+                const response = await apiClient.get(`${BASE_URL}/items/${productOptionsId}`);
                 setProduct(response.data);
             } catch (error) {
                 console.error('Error fetching product details:', error);
@@ -89,7 +89,7 @@ const FundingCreate = () => {
                 message: message,
                 endDate: endDate
             };
-            await axios.post(`${BASE_URL}/fundings`, requestBody);
+            await apiClient.post(`${BASE_URL}/fundings`, requestBody);
             alert('펀딩이 성공적으로 생성되었습니다.');
             navigate('/');
         } catch (error) {

@@ -86,14 +86,6 @@ export const SectionTitle = styled.div`
   font-weight: bold;
   font-family: "Pretendard";
   margin: 20px 0 20px;
-<<<<<<< HEAD
-`;
-
-export const Hr = styled.hr`
-  border: 1px solid #f2f2f2;
-  margin: 1em 0;
-=======
->>>>>>> 3e176956af4bf99546148d2970144c3022c60911
 `;
 
 export const Hr = styled.hr`

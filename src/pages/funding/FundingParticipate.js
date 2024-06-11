@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { apiClient } from '../../api/apiClient';
 import styled from 'styled-components';
 import AppContainer from "../../components/AppContainer";
 import NavigationBar from "../../components/Nav/NavigationBar";
@@ -30,7 +30,7 @@ const FundingParticipate = () => {
     useEffect(() => {
         const fetchFundingData = async () => {
             try {
-                const response = await axios.get(`${BASE_URL}/fundings/${fundingId}`);
+                const response = await apiClient.get(`${BASE_URL}/fundings/${fundingId}`);
                 setFunding(response.data);
                 console.log('펀딩 데이터 가져오기 성공:', response.data);
             } catch (error) {
@@ -70,7 +70,7 @@ const FundingParticipate = () => {
                 function (rsp) {
                     if (rsp.success) {
                         console.log('결제 성공:', rsp);
-                        axios.post(`${BASE_URL}/payments/complete/${rsp.imp_uid}`)
+                        apiClient.post(`${BASE_URL}/payments/complete/${rsp.imp_uid}`)
                             .then(paymentResponse => {
                                 console.log('결제 검증 응답 데이터:', paymentResponse.data);
                                 completeFundingParticipation(response.guestFundingId, paymentResponse.data);
@@ -92,7 +92,7 @@ const FundingParticipate = () => {
 
     const completeFundingParticipation = (guestFundingId, paymentId) => {
         console.log(`펀딩 참여 완료 요청: guestFundingId=${guestFundingId}, paymentId=${paymentId}`);
-        axios.patch(`${BASE_URL}/participations/${guestFundingId}/complete`, { paymentId })
+        apiClient.patch(`${BASE_URL}/participations/${guestFundingId}/complete`, { paymentId })
             .then(response => {
                 console.log('펀딩 참여 완료 성공:', response.data);
                 alert('펀딩 참여가 완료되었습니다.');
@@ -118,7 +118,7 @@ const FundingParticipate = () => {
         console.log('제출된 데이터:', data);
 
         try {
-            const response = await axios.post(`${BASE_URL}/fundings/${fundingId}/participations`, data);
+            const response = await apiClient.post(`${BASE_URL}/fundings/${fundingId}/participations`, data);
             console.log('펀딩 참여 응답 데이터:', response.data);
             setGuestFunding(response.data);
             handlePayment(response.data);
