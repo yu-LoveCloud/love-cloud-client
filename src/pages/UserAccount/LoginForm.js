@@ -47,6 +47,13 @@ const ErrorMessage = styled.p`
   margin-top: 20px;
 `;
 
+const CheckInput = styled.input`
+  background-color: #F2F2F2;
+  width: 27px;
+  height: 27px;
+  font-size: 16px;
+`;
+
 const SnsImg = styled.img`
   width : 64px;
   height : 64px;
@@ -59,7 +66,7 @@ const SnsButton = styled.button`
 `;
 
 function LoginForm() {
-  const [data, setData] = useState({ email: '', password: '' });
+  const [data, setData] = useState({ email: '', password: '', weddingRole: '' });
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
@@ -70,32 +77,67 @@ function LoginForm() {
       });
   };
 
+  const handleRoleChange = (role) => {
+    setData({
+        ...data, weddingRole: data.weddingRole === 'GUEST' ? '' : 'GUEST'
+    });
+};
+
   const login = () => {
-    axios.post('http://localhost:8080/auth/wedding-user/sign-in',
-      { email: data.email, password: data.password },
-      {
-      headers: {
-          'Content-Type': 'application/json'
-      }
-  })
-      .then(res => {
-        const accessToken = res.data ? res.data.access_token : null;
-        const refreshToken = res.data ? res.data.refresh_token : null;
-        if (accessToken) {
-          setCookie("access_token", accessToken, { path: '/' });
-          setCookie("refresh_token", refreshToken, { path: '/' });
-          setError('');
-          alert("로그인 되었습니다.");
-          navigate("/");
-        } else {
-          alert(res.data.message);
-          setError(res.data.message || "로그인 실패");
+    if (data.weddingRole === 'GUEST') {
+      axios.post('http://localhost:8080/auth/guest/sign-in', 
+        {email: data.email, password: data.password },
+        {
+        headers: {
+            'Content-Type': 'application/json'
         }
-      })
-      .catch(error => {
-        console.error('Login error:', error.response ? error.response.data.message : error.message);
-        setError('로그인 중 에러가 발생했습니다.');
-      });
+    })
+    .then(res => {
+      const accessToken = res.data ? res.data.access_token : null;
+      const refreshToken = res.data ? res.data.refresh_token : null;
+      if (accessToken) {
+        setCookie("access_token", accessToken, { path: '/' });
+        setCookie("refresh_token", refreshToken, { path: '/' });
+        setError('');
+        alert("로그인 되었습니다.");
+        navigate("/");
+      } else {
+        alert(res.data.message);
+        setError(res.data.message || "로그인 실패");
+      }
+    })
+    .catch(error => {
+      console.error('Login error:', error.response ? error.response.data.message : error.message);
+      setError('로그인 중 에러가 발생했습니다.');
+    });
+    }
+    else {
+      axios.post('http://localhost:8080/auth/wedding-user/sign-in',
+        { email: data.email, password: data.password },
+        {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(res => {
+          const accessToken = res.data ? res.data.access_token : null;
+          const refreshToken = res.data ? res.data.refresh_token : null;
+          if (accessToken) {
+            setCookie("access_token", accessToken, { path: '/' });
+            setCookie("refresh_token", refreshToken, { path: '/' });
+            setError('');
+            alert("로그인 되었습니다.");
+            navigate("/");
+          } else {
+            alert(res.data.message);
+            setError(res.data.message || "로그인 실패");
+          }
+        })
+        .catch(error => {
+          console.error('Login error:', error.response ? error.response.data.message : error.message);
+          setError('로그인 중 에러가 발생했습니다.');
+        });
+    }
   };
 
     const handleGoogleLogin = () => {
@@ -139,6 +181,12 @@ function LoginForm() {
                        style={{ marginBottom: '20px' }}
                    />
                 </div>
+                <div style={{ width: '100%' , paddingBottom: '10px' }}>
+                  <label>
+                    <CheckInput type="checkbox" checked={data.weddingRole === 'GUEST'} onChange={handleRoleChange} />
+                     하객이시라면 체크해주세요!
+                  </label>
+                </div>
                 <LoginButtonWrapper>
                   <LoginButton type='button' onClick={login}>로그인</LoginButton>
                 </LoginButtonWrapper>
@@ -150,7 +198,7 @@ function LoginForm() {
                </div>
                <div style ={{ display : 'flex' , justifyContent : 'space-between' }}>
                 <SnsButton onClick={handleGoogleLogin}>
-                    <SnsImg src='/images/GoogleLogin.jpg' alt='' />
+                    <SnsImg src='/images/GoogleLogin.png' alt='' />
                 </SnsButton>
                 <SnsButton onClick={handleKakaoLogin}>
                     <SnsImg src='/images/KakaoLogin.png' alt='' />
