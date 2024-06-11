@@ -10,7 +10,7 @@ import {
   formatDate,
   getOrderStatusText,
 } from "../../components/orderManagement/orderUtils";
-import { getOrderList } from "../../api/orderManagement/orderApi";
+import { getOrderList } from "../../api/orderApi";
 
 function ListOrder() {
   const navigate = useNavigate();

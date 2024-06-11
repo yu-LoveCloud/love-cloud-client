@@ -7,7 +7,7 @@ import OrderProduct from "../../components/orderManagement/OrderProduct";
 import OrderDetailTable from "../../components/orderManagement/OrderDetailTable";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getOrderDetail } from "../../api/orderManagement/orderApi";
+import { getOrderDetail } from "../../api/orderApi";
 import {
   formatDate,
   getDeliveryStatusText,
