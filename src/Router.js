@@ -22,6 +22,7 @@ import FundingList from "./pages/funding/FundingList";
 import FundingDetail from "./pages/funding/FundingDetail";
 import FundingParticipate from "./pages/funding/FundingParticipate";
 import UserFundingList from "./pages/funding/UserFundingList";
+import InvitationDetail from "./pages/invitation/InvitationDetail";
 
 function Router() {
   return (
@@ -38,6 +39,7 @@ function Router() {
         path="/invitations/create-process2"
         element={<InvitationCreateProcess2 />}
       />
+      <Route path="/invitations/:id" element={<InvitationDetail />} />
 
       <Route path="/changepassword" element={<ChangePassword />} />
       <Route path="/refundaccount" element={<RefundAccount />} />

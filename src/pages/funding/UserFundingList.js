@@ -12,7 +12,6 @@ import {
   CenterTitle,
 } from "../../components/Header/Header";
 import FundingCardComponent from "../../components/funding/FundingCardComponent";
-import { BASE_URL } from "../../constants/global";
 
 const FundingListContainer = styled.div``;
 
