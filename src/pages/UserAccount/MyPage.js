@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import AppContainer from '../../components/AppContainer';
@@ -6,12 +6,12 @@ import NavigationBar from '../../components/Nav/NavigationBar';
 import ContentContainer from '../../components/ContentContainer';
 import WhiteButton from '../../components/button/WhiteButton';
 import { Title } from "../../components/Typography";
-import { ButtonWrapper } from '../../components/button/ButtonWrapper';
 import { getCookie, removeCookie } from '../../Cookie';
 import axios from 'axios';
+import { ButtonWrapper } from '../../components/button/ButtonWrapper';
 
 const Menu = styled.div`
-  margin-top: 50px;
+  margin-top: 30px;
   width: 100%;
 `;
 
@@ -20,35 +20,40 @@ const MenuList = styled.div`
   padding: 10px;
 `;
 
-const Unregister = styled.p`
-  position: fixed;
-  bottom: 30px;
-  color: #757575;
-  width: 100%;
-  text-align: center;
-`;
+// const Unregister = styled.div`
+//   width: 100%;
+//   position: absolute;
+//   padding-bottom: 20px;
+//   padding-top: 10px;
+//   text-align: center;
+//   color: #757575;
+// `;
 
 function MyPage() {
     const navigate = useNavigate();
-    
-    // const isAuthenticated = () => {
-    //     const accessToken = getCookie("access_token");
-    //     return !!accessToken;
-    // };
-    const accessToken = getCookie("access_token");
-    
-    if(!accessToken) {
-        //navigate('/loginform');
-    }
+    const [username, setUsername] = useState('');
+
     useEffect(() => {
-        
-        console.log(accessToken);
-    })
-    // useEffect(() => {
-    // //     if(!isAuthenticated()) {
-    // //         navigate('/loginform');
-    // //     }
-    // // }, [navigate]);
+        const accessToken = getCookie('access_token');
+
+        if (!accessToken) {
+            navigate('/loginform'); 
+        } else {
+            const getUsername = async () => {
+                try {
+                    const response = await axios.get('http://localhost:8080/user/me', {
+                        headers: { 'Authorization': `Bearer ${accessToken}` }
+                    });
+                    setUsername(response.data.name);
+                    console.log(response.data);
+                } catch (error) {
+                    console.log(error);
+                    window.alert("데이터 안불러와짐;;");
+                }
+            };
+            getUsername();
+        }
+    }, [navigate]);
 
     const handleLogout = () => {
         const accessToken = getCookie("access_token");
@@ -61,7 +66,10 @@ function MyPage() {
         .then(res => {
             console.log('Logged out successfully:', res.data);
             removeCookie("access_token");
+            removeCookie('refresh_token');
             navigate('/'); // 로그아웃 성공시 메인으로 이동
+            window.alert("로그아웃 되었습니다.");
+
         })
         .catch(error => {
             console.error('Logout failed:', error);
@@ -74,9 +82,10 @@ function MyPage() {
             <NavigationBar />
             <ContentContainer>
                 <Title>마이페이지</Title>
+                <h3>{username}님</h3>
                 <Menu>
                     <MenuList>
-                        <Link to='/' style={{color: 'inherit' , textDecoration: 'none' }}>내 정보 관리</Link>
+                        <Link to='/disconnectpartner' style={{color: 'inherit' , textDecoration: 'none' }}>내 정보 관리</Link>
                     </MenuList>
                     <MenuList>
                         <Link to='/changepassword' style={{color: 'inherit' , textDecoration: 'none' }}>비밀번호 재설정</Link>
@@ -92,15 +101,16 @@ function MyPage() {
                     </MenuList>
                 </Menu>
                 <ButtonWrapper>
-                        <WhiteButton onClick={handleLogout}>로그아웃</WhiteButton>
+                    <WhiteButton onClick={handleLogout}>로그아웃</WhiteButton>
                 </ButtonWrapper>
-
-                    <Unregister>회원탈퇴</Unregister>
-
+                {/* 회원탈퇴버튼 삭제
+                    <ButtonWrapper>
+                        <Unregister onClick={handleUnregister}>회원탈퇴</Unregister>
+                    </ButtonWrapper>
+                */} 
             </ContentContainer>
         </AppContainer>
     );
 }
-
 
 export default MyPage;
