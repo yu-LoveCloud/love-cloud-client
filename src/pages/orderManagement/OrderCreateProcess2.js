@@ -15,6 +15,7 @@ import PurpleButton from "../../components/button/PurpleButton";
 import OrderProduct from "../../components/orderManagement/OrderProduct";
 import { createOrder } from "../../api/orderApi";
 
+
 function OrderCreateProcess2() {
   const location = useLocation();
   const navigate = useNavigate();
@@ -128,7 +129,6 @@ function OrderCreateProcess2() {
       })
       .catch((error) => {
         if (error.response) {
-          console.error("주문 생성 중 오류 발생zz: ", error.response.data);
           if (error.status === 403) {
             alert("주문 권한이 없습니다.");
           } else {

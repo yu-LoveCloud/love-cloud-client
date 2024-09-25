@@ -14,7 +14,6 @@ import {
 } from "../../components/Header/Header";
 import FundingCardComponent from "../../components/funding/FundingCardComponent";
 import GuestFundingComponent from "../../components/funding/GuestFundingComponent";
-import { BASE_URL } from "../../constants/global";
 
 const FundingDetail = () => {
   const navigate = useNavigate();
