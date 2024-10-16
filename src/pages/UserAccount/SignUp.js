@@ -147,11 +147,9 @@ function SignUp() {
                             </label>
                         </div>
                     </div>
-                    <div style={{ position: 'fixed', bottom: '24px', width: '300px' }}>
-                        <ButtonWrapper>
-                            <PurpleButton as="button" type="submit" onClick={handleSignUp}>회원가입하기</PurpleButton>
-                        </ButtonWrapper>
-                    </div>
+                    <ButtonWrapper>
+                        <PurpleButton as="button" type="submit" onClick={handleSignUp}>회원가입하기</PurpleButton>
+                    </ButtonWrapper>
                 </form>
             </ContentContainer>
         </AppContainer>
