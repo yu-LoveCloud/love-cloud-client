@@ -6,6 +6,7 @@ const InvitationCard = styled.div`
   border-radius: 12px;
   box-shadow: 0 16px 24px 0 rgba(180, 154, 217, 0.1);
   margin-bottom: 24px;
+  border: 1px solid #d9d9d9;
   position: relative;
 
   ${(props) =>

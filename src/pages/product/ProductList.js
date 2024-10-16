@@ -8,7 +8,7 @@ import ContentContainer from "../../components/ContentContainer";
 import { Title } from "../../components/Typography";
 import SelectedHeart from "../../assets/images/product/selected-heart.png";
 import UnselectedHeart from "../../assets/images/product/unselected-heart.png";
-import { BASE_URL, IMAGE_PREFIX } from "../../constants/global";
+import { IMAGE_PREFIX } from "../../constants/global";
 
 // styled-components 정의
 const FilterContainer = styled.div`

@@ -13,6 +13,7 @@ const StyledButton = styled.button`
   text-align: center;
   cursor: pointer; /* 커서 설정 */
   font-family: "Pretendard";
+  margin-bottom: 10px;
   transition: transform 0.3s, box-shadow 0.3s; /* 애니메이션 적용 */
 
   &:hover {

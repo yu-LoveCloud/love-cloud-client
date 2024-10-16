@@ -18,7 +18,7 @@ import {
   Input,
   TextArea,
 } from "../../components/Typography";
-import { BASE_URL, IMAGE_PREFIX } from "../../constants/global";
+import { IMAGE_PREFIX } from "../../constants/global";
 
 const ButtonWrapper = styled.div`
   padding-top: 0px;
@@ -98,12 +98,9 @@ const FundingCreate = () => {
         message: message,
         endDate: endDate,
       };
-      const response = await apiClient.post(`/fundings`, requestBody);
+      await apiClient.post(`/fundings`, requestBody);
       alert("펀딩이 성공적으로 생성되었습니다.");
-
-      const location = response.headers.location;
-      console.log('Funding created at:', location);
-      navigate(location); 
+      navigate("/user/fundings");
     } catch (error) {
       console.error("Error creating funding:", error);
       alert("펀딩 생성에 실패했습니다.");
