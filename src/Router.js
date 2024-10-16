@@ -22,7 +22,8 @@ import FundingList from "./pages/funding/FundingList";
 import FundingDetail from "./pages/funding/FundingDetail";
 import FundingParticipate from "./pages/funding/FundingParticipate";
 import UserFundingList from "./pages/funding/UserFundingList";
-import InvitationDetail from "./pages/invitation/InvitationDetail";
+import DisconnectPartner from "./pages/Partner/DisconnectPartner";
+// import InvitationDetail from "./pages/invitation/InvitationDetail";
 
 function Router() {
   return (
@@ -39,7 +40,7 @@ function Router() {
         path="/invitations/create-process2"
         element={<InvitationCreateProcess2 />}
       />
-      <Route path="/invitations/:id" element={<InvitationDetail />} />
+      {/* <Route path="/invitations/:id" element={<InvitationDetail />} /> */}
 
       <Route path="/changepassword" element={<ChangePassword />} />
       <Route path="/refundaccount" element={<RefundAccount />} />
@@ -66,6 +67,7 @@ function Router() {
       <Route path="/orders" element={<ListOrder />} />
       <Route path="/orders/create-process1" element={<OrderCreateProcess1 />} />
       <Route path="/orders/create-process2" element={<OrderCreateProcess2 />} />
+      <Route path='/disconnectpartner' element={< DisconnectPartner/>} />
     </Routes>
   );
 }
