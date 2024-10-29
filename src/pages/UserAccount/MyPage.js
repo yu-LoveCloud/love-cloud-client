@@ -32,12 +32,13 @@ const MenuList = styled.div`
 function MyPage() {
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
+    const [coupleId, setCoupleId] = useState('');
 
     useEffect(() => {
         const accessToken = getCookie('access_token');
 
         if (!accessToken) {
-            navigate('/loginform'); 
+            navigate('/loginform');
         } else {
             const getUsername = async () => {
                 try {
@@ -45,6 +46,7 @@ function MyPage() {
                         headers: { 'Authorization': `Bearer ${accessToken}` }
                     });
                     setUsername(response.data.name);
+                    setCoupleId(response.data.coupleId);
                     console.log(response.data);
                 } catch (error) {
                     console.log(error);
@@ -54,6 +56,16 @@ function MyPage() {
             getUsername();
         }
     }, [navigate]);
+
+    const isCouple = () => {
+        // user/me 의 coupleId가지고 커플인지 확인하는걸로 해야하는지 모르겠지만
+        if ( !coupleId ) {
+            navigate('/partnerconnect');
+        } else {
+            navigate('/disconnectpartner');
+        }
+    }
+    
 
     const handleLogout = () => {
         const accessToken = getCookie("access_token");
@@ -91,7 +103,7 @@ function MyPage() {
                         <Link to='/changepassword' style={{color: 'inherit' , textDecoration: 'none' }}>비밀번호 재설정</Link>
                     </MenuList>
                     <MenuList>
-                        <Link to='/partnerconnect' style={{color: 'inherit' , textDecoration: 'none' }}>파트너 연결하기</Link>
+                        <div onClick={isCouple}>파트너 관리 페이지</div>
                     </MenuList>
                     <MenuList>
                         <Link to='/refundaccount' style={{color: 'inherit' , textDecoration: 'none' }}>환불 계좌 등록하기</Link>
