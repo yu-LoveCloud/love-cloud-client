@@ -2,31 +2,31 @@ import AppContainer from "../../components/AppContainer";
 import ContentContainer from "../../components/ContentContainer";
 import NavigationBar from "../../components/Nav/NavigationBar";
 import { Title } from "../../components/Typography";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import OrderProduct from "../../components/orderManagement/OrderProduct";
 import OrderDetailTable from "../../components/orderManagement/OrderDetailTable";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getOrderDetail } from "../../api/orderApi";
+import { getOrderDetail, cancelOrder } from "../../api/orderApi";
 import {
   formatDate,
   getDeliveryStatusText,
+  getOrderStatusText,
 } from "../../components/orderManagement/orderUtils";
 
 function DetailOrder() {
   const [order, setOrder] = useState({});
-  const [errorMessage, setErrorMessage] = useState(""); // 에러 메시지 상태 추가
+  const [errorMessage, setErrorMessage] = useState("");
   const { orderId } = useParams();
 
   useEffect(() => {
     getOrderDetail(orderId)
       .then((data) => {
         setOrder(data);
-        setErrorMessage(""); // 성공적으로 데이터를 가져오면 에러 메시지 초기화
+        setErrorMessage("");
       })
       .catch((error) => {
         if (error.response) {
-          // 서버 응답이 있으면
           if (error.response.status === 404) {
             setErrorMessage("존재하지 않는 주문입니다");
           } else if (error.response.status === 403) {
@@ -35,12 +35,29 @@ function DetailOrder() {
             setErrorMessage("오류가 발생했습니다. 다시 시도해주세요.");
           }
         } else {
-          // 서버 응답이 없으면
           setErrorMessage("서버와 연결할 수 없습니다.");
         }
         console.error("주문 상세 정보를 가져오는 중 오류 발생: ", error);
       });
   }, [orderId]);
+
+  const handleCancelOrder = () => {
+    cancelOrder(orderId)
+      .then(() => {
+        setOrder((prevOrder) => ({
+          ...prevOrder,
+          orderStatus: "CANCEL_REQUESTED",
+        }));
+        setErrorMessage("");
+      })
+      .catch((error) => {
+        setErrorMessage("주문 취소 중 오류가 발생했습니다.");
+        alert("주문 취소 중 오류가 발생했습니다.", error);
+        console.error("주문 취소 오류: ", error);
+      });
+  };
+
+  const isCancellable = order.orderStatus === "ORDER_PLACED";
 
   return (
     <AppContainer>
@@ -56,6 +73,19 @@ function DetailOrder() {
                 <Label>주문번호</Label> {order.orderNumber}
               </LeftSection>
               <RightSection>{formatDate(order.orderDateTime)}</RightSection>
+            </OrderInfo>
+            <OrderInfo>
+              <LeftSection>
+                <Label>주문상태</Label> {getOrderStatusText(order.orderStatus)}
+              </LeftSection>
+              <RightSection>
+                <CancelButton
+                  onClick={isCancellable ? handleCancelOrder : null}
+                  disabled={!isCancellable}
+                >
+                  주문 취소
+                </CancelButton>
+              </RightSection>
             </OrderInfo>
             <Hr />
             <OrderInfo>
@@ -123,4 +153,28 @@ const Error = styled.div`
   font-size: 14px;
   text-align: center;
   margin-top: 20px;
+`;
+
+const CancelButton = styled.button`
+  padding: 8px 16px;
+  background-color: #ff6666;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+
+  &:hover {
+    background-color: #ff4d4d;
+  }
+
+  ${(props) =>
+    props.disabled &&
+    css`
+      background-color: #cccccc;
+      cursor: not-allowed;
+      &:hover {
+        background-color: #cccccc;
+      }
+    `}
 `;
