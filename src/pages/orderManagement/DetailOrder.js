@@ -13,10 +13,12 @@ import {
   getDeliveryStatusText,
   getOrderStatusText,
 } from "../../components/orderManagement/orderUtils";
+import LoadingSpinner from "../../components/LoadingSpinner"; // Import the LoadingSpinner component
 
 function DetailOrder() {
   const [order, setOrder] = useState({});
   const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state for the cancel request
   const { orderId } = useParams();
 
   useEffect(() => {
@@ -42,6 +44,7 @@ function DetailOrder() {
   }, [orderId]);
 
   const handleCancelOrder = () => {
+    setLoading(true); // Start loading
     cancelOrder(orderId)
       .then(() => {
         setOrder((prevOrder) => ({
@@ -54,6 +57,9 @@ function DetailOrder() {
         setErrorMessage("주문 취소 중 오류가 발생했습니다.");
         alert("주문 취소 중 오류가 발생했습니다.", error);
         console.error("주문 취소 오류: ", error);
+      })
+      .finally(() => {
+        setLoading(false); // Stop loading
       });
   };
 
@@ -66,6 +72,8 @@ function DetailOrder() {
         <Title>주문 상세</Title>
         {errorMessage ? (
           <Error>{errorMessage}</Error>
+        ) : loading ? ( // Show LoadingSpinner while loading is true
+          <LoadingSpinner />
         ) : (
           <>
             <OrderInfo>
