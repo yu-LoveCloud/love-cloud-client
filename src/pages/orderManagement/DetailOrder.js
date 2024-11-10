@@ -72,11 +72,10 @@ function DetailOrder() {
         <Title>주문 상세</Title>
         {errorMessage ? (
           <Error>{errorMessage}</Error>
-        ) : loading ? ( // Show LoadingSpinner while loading is true
+        ) : loading && ( // Show LoadingSpinner while loading is true
           <LoadingSpinner />
-        ) : (
-          <>
-            <OrderInfo>
+        )}
+        <OrderInfo>
               <LeftSection>
                 <Label>주문번호</Label> {order.orderNumber}
               </LeftSection>
@@ -113,8 +112,7 @@ function DetailOrder() {
               ))}
             <Label>배송 정보</Label>
             <OrderDetailTable deliveryInfo={order} />
-          </>
-        )}
+          
       </ContentContainer>
     </AppContainer>
   );
