@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import NavigationBar from '../../components/Nav/NavigationBar';
 import ContentContainer from '../../components/ContentContainer';
 import { ButtonWrapper } from '../../components/button/ButtonWrapper';
@@ -23,6 +23,9 @@ const DeliveryAddressAdd = () => {
     const [errors, setErrors] = useState({});
     const detailAddressRef = useRef(null);
     const navigate = useNavigate();
+    const location = useLocation(); 
+
+    const { selectedFundings, previousFormData } = location.state || {};
 
     useEffect(() => {
         const script = document.createElement('script');
@@ -114,7 +117,9 @@ const DeliveryAddressAdd = () => {
         if (!validateForm()) return;
 
         createDeliveryAddress(address).then(() => {
-            navigate('/delivery-addresses');
+            navigate('/delivery-addresses',
+                { state: { selectedFundings, previousFormData } }
+            );
         }).catch((error) => {
             console.error('Error creating delivery address:', error);
         });

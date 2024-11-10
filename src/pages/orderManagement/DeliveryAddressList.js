@@ -38,7 +38,9 @@ const DeliveryAddressList = () => {
     };
 
     const handleAddAddress = () => {
-        navigate('/delivery-addresses/create');
+        navigate('/delivery-addresses/create',
+            {state: {selectedFundings, previousFormData}}
+        );
     };
 
     const handleEditAddress = (id) => {
