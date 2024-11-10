@@ -3,19 +3,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import AppContainer from "../../components/AppContainer";
 import ContentContainer from "../../components/ContentContainer";
 import NavigationBar from "../../components/Nav/NavigationBar";
-import {
-  Hr,
-  ListItem,
-  OrderedListContainer,
-  Title,
-  Input,
-} from "../../components/Typography";
+import { Hr, ListItem, OrderedListContainer, Title, Input } from "../../components/Typography";
 import styled from "styled-components";
 import PurpleButton from "../../components/button/PurpleButton";
 import OrderProduct from "../../components/orderManagement/OrderProduct";
 import { createOrder } from "../../api/orderApi";
+import { getDefaultDeliveryAddress } from "../../api/deliveryAddressApi"; // import the function
 import OrderCreateDeliveryAddressTable from "../../components/orderManagement/OrderCreateDeliveryAddressTable";
-import { getDefaultDeliveryAddress } from "../../api/deliveryAddressApi";
 
 function OrderCreateProcess2() {
   const location = useLocation();
@@ -40,28 +34,27 @@ function OrderCreateProcess2() {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (!selectedAddress && !previousFormData.deliveryName) {
-        getDefaultDeliveryAddress().then((defaultAddress) => {
-            setFormData((prevData) => ({
-                ...prevData,
-                receiverName: defaultAddress.receiverName,
-                receiverPhoneNumber: defaultAddress.receiverPhoneNumber,
-                deliveryName: defaultAddress.deliveryName,
-                zipcode: defaultAddress.zipCode,
-                address: defaultAddress.address,
-                detailAddress: defaultAddress.detailAddress,
-                deliveryMemo: defaultAddress.deliveryMemo,
-            }));
-        }).catch((error) => {
-            console.error("Error fetching default delivery address:", error);
-        });
-    }
     if (!selectedFundings.length) {
-        alert("잘못된 접근입니다.");
-        navigate("/orders/create-process1");
+      alert("잘못된 접근입니다.");
+      navigate("/orders/create-process1");
+    } else if (!selectedAddress) {
+      // Load default address if no address is selected
+      getDefaultDeliveryAddress().then((data) => {
+        setFormData((prevData) => ({
+          ...prevData,
+          receiverName: data.receiverName,
+          receiverPhoneNumber: data.receiverPhoneNumber,
+          deliveryName: data.deliveryName,
+          zipcode: data.zipCode,
+          address: data.address,
+          detailAddress: data.detailAddress,
+          deliveryMemo: data.deliveryMemo,
+        }));
+      }).catch((error) => {
+        console.error("Error fetching default delivery address:", error);
+      });
     }
-}, [selectedAddress, previousFormData, selectedFundings, navigate]);
-
+  }, [selectedFundings, selectedAddress, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -124,14 +117,18 @@ function OrderCreateProcess2() {
           {errors.ordererPhoneNumber && <Error>{errors.ordererPhoneNumber}</Error>}
           <Label>메모</Label>
           <Input type="text" name="ordererMemo" value={formData.ordererMemo} onChange={handleChange} />
-          <ListItem>배송 정보</ListItem>
+          <ListItemContainer>
+            <ListItem>배송 정보</ListItem>
+            <ChangeAddressButton onClick={handleAddressChange}>배송지 변경</ChangeAddressButton>
+          </ListItemContainer>
+          
           <OrderCreateDeliveryAddressTable
             deliveryInfo={formData}
             onMemoChange={(memo) => setFormData({ ...formData, deliveryMemo: memo })}
             editable={true}
           />
         </OrderedListContainer>
-        <PurpleButton onClick={handleAddressChange}>배송지 변경</PurpleButton>
+        
         <PurpleButton onClick={handleSubmit}>주문하기</PurpleButton>
       </ContentContainer>
     </AppContainer>
@@ -152,4 +149,21 @@ const Error = styled.div`
   margin-top: -10px;
   margin-bottom: 10px;
 `;
+const ChangeAddressButton = styled.button`
+  background-color: white;
+  color: #4c3073;
+  padding: 6px 12px;
+  font-size: 12px;
+  border: 1px solid #4c3073;
+  border-radius: 4px;
+  cursor: pointer;
+  &:hover {
+    background-color: #f5f5f5;
+  }
+`;
 
+const ListItemContainer = styled.div`
+display: flex;
+align-items: center;
+justify-content: space-between;
+`;
