@@ -10,6 +10,7 @@ import OrderProduct from "../../components/orderManagement/OrderProduct";
 import { createOrder } from "../../api/orderApi";
 import { getDefaultDeliveryAddress } from "../../api/deliveryAddressApi"; // import the function
 import OrderCreateDeliveryAddressTable from "../../components/orderManagement/OrderCreateDeliveryAddressTable";
+import LoadingSpinner from "../../components/LoadingSpinner";
 
 function OrderCreateProcess2() {
   const location = useLocation();
@@ -32,6 +33,7 @@ function OrderCreateProcess2() {
   });
 
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false); // Loading state for the cancel request
 
   useEffect(() => {
     if (!selectedFundings.length) {
@@ -66,6 +68,7 @@ function OrderCreateProcess2() {
 
   const handleSubmit = () => {
     if (!validateForm()) return;
+    setLoading(true); // Start loading
     createOrder(formData)
       .then(() => {
         alert("주문이 완료되었습니다.");
@@ -73,7 +76,9 @@ function OrderCreateProcess2() {
       })
       .catch((error) => {
         alert("주문 실패: " + (error.response?.data?.message || "알 수 없는 오류"));
-      });
+      }).finally(() => {
+        setLoading(false); // Stop loading
+      });;
   };
 
   const handleAddressChange = () => {
@@ -102,6 +107,9 @@ function OrderCreateProcess2() {
       <NavigationBar />
       <ContentContainer>
         <Title>주문서 작성</Title>
+        {loading && (
+          <LoadingSpinner />
+        )}
         <Hr />
         {selectedFundings.map((funding) => (
           <OrderProduct key={funding.productId} product={funding} />
