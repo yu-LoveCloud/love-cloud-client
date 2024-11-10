@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import NavigationBar from '../../components/Nav/NavigationBar';
 import ContentContainer from '../../components/ContentContainer';
 import { ButtonWrapper } from '../../components/button/ButtonWrapper';
@@ -8,7 +8,6 @@ import { Title, Input, SectionTitle, Hr } from '../../components/Typography';
 import AppContainer from '../../components/AppContainer';
 import styled from 'styled-components';
 import { getDeliveryAddress, updateDeliveryAddress } from '../../api/deliveryAddressApi';
-
 
 const DeliveryAddressUpdate = () => {
     const [address, setAddress] = useState({
@@ -21,13 +20,15 @@ const DeliveryAddressUpdate = () => {
         receiverPhoneNumber: '',
         isDefault: false,
     });
-
-    const { id } = useParams(); // 주소 ID 가져오기
+    const [errors, setErrors] = useState({});
+    const { id } = useParams();
     const detailAddressRef = useRef(null);
     const navigate = useNavigate();
+    const location = useLocation(); 
+
+    const { selectedFundings, previousFormData } = location.state || {};
 
     useEffect(() => {
-        // 기존 주소 정보 불러오기
         getDeliveryAddress(id).then((data) => {
             setAddress({
                 deliveryName: data.deliveryName,
@@ -39,39 +40,28 @@ const DeliveryAddressUpdate = () => {
                 receiverPhoneNumber: data.receiverPhoneNumber,
                 isDefault: data.isDefault,
             });
-            const script = document.createElement('script');
-            script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
-            script.async = true;
-            document.body.appendChild(script);
-    
-            return () => {
-                document.body.removeChild(script);
-            };
         }).catch((error) => {
             console.error("Error fetching delivery address:", error);
         });
+
+        const script = document.createElement('script');
+        script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+        script.async = true;
+        document.body.appendChild(script);
+
+        return () => {
+            document.body.removeChild(script);
+        };
     }, [id]);
 
     const handleComplete = (data) => {
-        let addr = '';
+        let addr = data.userSelectedType === 'R' ? data.roadAddress : data.jibunAddress;
         let extraAddr = '';
 
         if (data.userSelectedType === 'R') {
-            addr = data.roadAddress;
-        } else {
-            addr = data.jibunAddress;
-        }
-
-        if (data.userSelectedType === 'R') {
-            if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
-                extraAddr += data.bname;
-            }
-            if (data.buildingName !== '' && data.apartment === 'Y') {
-                extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-            }
-            if (extraAddr !== '') {
-                extraAddr = ' (' + extraAddr + ')';
-            }
+            if (data.bname && /[동|로|가]$/g.test(data.bname)) extraAddr += data.bname;
+            if (data.buildingName && data.apartment === 'Y') extraAddr += (extraAddr ? `, ${data.buildingName}` : data.buildingName);
+            if (extraAddr) extraAddr = ` (${extraAddr})`;
         }
 
         setAddress((prev) => ({
@@ -81,15 +71,11 @@ const DeliveryAddressUpdate = () => {
             extraAddress: extraAddr,
         }));
 
-        if (detailAddressRef.current) {
-            detailAddressRef.current.focus();
-        }
+        detailAddressRef.current?.focus();
     };
 
     const handleSearch = () => {
-        new window.daum.Postcode({
-            oncomplete: handleComplete,
-        }).open();
+        new window.daum.Postcode({ oncomplete: handleComplete }).open();
     };
 
     const handleChange = (e) => {
@@ -98,6 +84,15 @@ const DeliveryAddressUpdate = () => {
             ...prev,
             [name]: value,
         }));
+
+        // Validate phone number format for receiverPhoneNumber
+        if (name === 'receiverPhoneNumber') {
+            const phoneRegex = /^010-\d{4}-\d{4}$/;
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                receiverPhoneNumber: phoneRegex.test(value) ? '' : '전화번호 형식은 010-1234-5678입니다.',
+            }));
+        }
     };
 
     const handleCheckboxChange = () => {
@@ -107,18 +102,33 @@ const DeliveryAddressUpdate = () => {
         }));
     };
 
+    const validateForm = () => {
+        const newErrors = {};
+        if (!address.deliveryName) newErrors.deliveryName = '배송지 별칭을 입력해 주세요.';
+        if (!address.zipCode) newErrors.zipCode = '우편번호를 입력해 주세요.';
+        if (!address.address) newErrors.address = '주소를 입력해 주세요.';
+        if (!address.detailAddress) newErrors.detailAddress = '상세주소를 입력해 주세요.';
+        if (!address.receiverName) newErrors.receiverName = '수취인명을 입력해 주세요.';
+        const phoneRegex = /^010-\d{4}-\d{4}$/;
+        if (!phoneRegex.test(address.receiverPhoneNumber)) {
+            newErrors.receiverPhoneNumber = '전화번호 형식은 010-1234-5678입니다.';
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // 필수 입력값 검증
-        if (!address.deliveryName || !address.zipCode || !address.address || !address.detailAddress || !address.receiverName || !address.receiverPhoneNumber) {
-            alert('모든 필수 항목을 입력해 주세요.');
-            return;
-        }
+        if (!validateForm()) return;
 
-        // 주소 업데이트 API 호출
         updateDeliveryAddress(id, address).then(() => {
-            navigate('/delivery-addresses');
+            navigate('/delivery-addresses', {
+                state: {
+                    selectedFundings,
+                    previousFormData,
+                }
+            });
         }).catch((error) => {
             console.error('Error updating delivery address:', error);
         });
@@ -142,6 +152,7 @@ const DeliveryAddressUpdate = () => {
                             placeholder="예) 집, 회사"
                             required
                         />
+                        {errors.deliveryName && <Error>{errors.deliveryName}</Error>}
                     </InputGroup>
                     <InputGroup>
                         <Label>우편번호</Label>
@@ -157,6 +168,7 @@ const DeliveryAddressUpdate = () => {
                                 우편번호 찾기
                             </Button>
                         </InputWrapper>
+                        {errors.zipCode && <Error>{errors.zipCode}</Error>}
                     </InputGroup>
                     <InputGroup>
                         <Label>주소</Label>
@@ -167,6 +179,7 @@ const DeliveryAddressUpdate = () => {
                             placeholder="주소"
                             readOnly
                         />
+                        {errors.address && <Error>{errors.address}</Error>}
                     </InputGroup>
                     <InputGroup>
                         <Label>상세주소</Label>
@@ -179,6 +192,7 @@ const DeliveryAddressUpdate = () => {
                             ref={detailAddressRef}
                             required
                         />
+                        {errors.detailAddress && <Error>{errors.detailAddress}</Error>}
                     </InputGroup>
                     <InputGroup>
                         <Label>배송 메모</Label>
@@ -200,6 +214,7 @@ const DeliveryAddressUpdate = () => {
                             placeholder="예) 홍길동"
                             required
                         />
+                        {errors.receiverName && <Error>{errors.receiverName}</Error>}
                     </InputGroup>
                     <InputGroup>
                         <Label>연락처</Label>
@@ -211,6 +226,7 @@ const DeliveryAddressUpdate = () => {
                             placeholder="010-1234-5678"
                             required
                         />
+                        {errors.receiverPhoneNumber && <Error>{errors.receiverPhoneNumber}</Error>}
                     </InputGroup>
                     <InputGroup>
                         <CheckboxLabel>
@@ -286,4 +302,10 @@ const TextArea = styled(Input).attrs({ as: "textarea" })`
     padding: 12px;
     font-size: 12px;
     margin-top: 4px;
-    `;
+`;
+
+const Error = styled.div`
+    color: red;
+    font-size: 12px;
+    margin-top: 4px;
+`;

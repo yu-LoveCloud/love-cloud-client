@@ -24,7 +24,7 @@ export const Paragraph = styled.p`
 `;
 
 //OrderedList
-export const OrderedListContainer = styled.ol`
+export const OrderedListContainer = styled.ol` ㅁ
   list-style: none;
   counter-reset: item;
   padding-left: 0;
