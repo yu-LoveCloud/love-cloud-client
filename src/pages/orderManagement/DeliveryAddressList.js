@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getDeliveryAddressList } from '../../api/deliveryAddressApi';
+import { getDeliveryAddressList, deleteDeliveryAddress } from '../../api/deliveryAddressApi';
 import AppContainer from '../../components/AppContainer';
 import NavigationBar from '../../components/Nav/NavigationBar';
 import ContentContainer from '../../components/ContentContainer';
@@ -35,12 +35,26 @@ const DeliveryAddressList = () => {
         navigate('/delivery-addresses/create');
     };
 
+    const handleEditAddress = (id) => {
+        navigate(`/delivery-addresses/${id}`);
+    };
+
+    const handleDeleteAddress = (id) => {
+        if (window.confirm("정말 삭제하시겠습니까?")) {
+            deleteDeliveryAddress(id).then(() => {
+                setAddresses(addresses.filter((address) => address.id !== id));
+            }).catch((error) => {
+                console.error("Error deleting address:", error);
+            });
+        }
+    };
+
     return (
         <AppContainer>
             <NavigationBar />
             <ContentContainer>
                 <Title>배송지 목록</Title>
-                <WhiteButton onClick={handleAddAddress}>배송지 추가하기</WhiteButton>
+                <WhiteButton onClick={handleAddAddress} shadow={false}>배송지 추가하기</WhiteButton>
                 <AddressList>
                     {addresses.map((address) => (
                         <AddressItem 
@@ -60,7 +74,13 @@ const DeliveryAddressList = () => {
                                 <AddressDetails>
                                     {address.address} {address.detailAddress} ({address.zipCode})
                                 </AddressDetails>
-                                <PhoneNumber>{address.receiverPhoneNumber}</PhoneNumber>
+                                <PhoneNumber>
+                                    {address.receiverPhoneNumber}
+                                    <EditDeleteButtons>
+                                        <EditButton onClick={() => handleEditAddress(address.id)}>수정</EditButton>
+                                        <DeleteButton onClick={() => handleDeleteAddress(address.id)}>삭제</DeleteButton>
+                                    </EditDeleteButtons>
+                                </PhoneNumber>
                             </AddressInfo>
                         </AddressItem>
                     ))}
@@ -87,7 +107,7 @@ const AddressItem = styled.li`
     align-items: center;
     padding: 12px;
     border-bottom: 1px solid #ddd;
-    opacity: ${({ isSelected }) => (isSelected ? '1' : '0.6')}; // 선택되지 않은 항목의 투명도 감소
+    opacity: ${({ isSelected }) => (isSelected ? '1' : '0.6')}; 
 `;
 
 const RadioButton = styled.input.attrs({ type: 'radio' })`
@@ -98,7 +118,8 @@ const RadioButton = styled.input.attrs({ type: 'radio' })`
 const AddressInfo = styled.div`
     display: flex;
     flex-direction: column;
-    color: ${({ isSelected }) => (isSelected ? '#000' : '#888')}; // 선택되지 않은 항목의 텍스트 색상 연하게 설정
+    color: ${({ isSelected }) => (isSelected ? '#000' : '#888')};
+    width: 100%;
 `;
 
 const AddressName = styled.div`
@@ -124,4 +145,47 @@ const AddressDetails = styled.div`
 const PhoneNumber = styled.div`
     font-size: 14px;
     margin-top: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
 `;
+
+const EditDeleteButtons = styled.div`
+    display: flex;
+    gap: 8px;
+    margin-left: auto; // 우측 끝 정렬
+`;
+
+const EditButton = styled.button`
+    background-color: white; // 흰색 배경
+    color: #4c3073; // 텍스트 색상
+    border: 1px solid #4c3073; // 테두리 색상
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+        background-color: #f7f4fc; // 배경색을 살짝 변경하여 호버 효과
+    }
+`;
+
+const DeleteButton = styled.button`
+    background-color: white; // 흰색 배경
+    color: #d9534f; // 텍스트 색상
+    border: 1px solid #d9534f; // 테두리 색상
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+        background-color: #fdecea; // 배경색을 살짝 변경하여 호버 효과
+    }
+`;
+

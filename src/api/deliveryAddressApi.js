@@ -40,3 +40,13 @@ export const getDeliveryAddress = async (addressId) => {
     throw error;
     }
 }
+
+export const deleteDeliveryAddress = async (addressId) => {
+    try {
+    const response = await apiClient.delete(`/delivery-addresses/${addressId}`);
+    return response.data;
+    } catch (error) {
+    console.error("Error deleting delivery-address:", error);
+    throw error;
+    }
+}
