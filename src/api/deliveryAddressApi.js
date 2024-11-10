@@ -50,3 +50,13 @@ export const deleteDeliveryAddress = async (addressId) => {
     throw error;
     }
 }
+
+export const getDefaultDeliveryAddress = async () => {
+    try {
+    const response = await apiClient.get(`/delivery-addresses/default`);
+    return response.data;
+    } catch (error) {
+    console.error("Error fetching default delivery-address:", error);
+    throw error;
+    }
+}

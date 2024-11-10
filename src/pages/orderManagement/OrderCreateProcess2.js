@@ -15,6 +15,7 @@ import PurpleButton from "../../components/button/PurpleButton";
 import OrderProduct from "../../components/orderManagement/OrderProduct";
 import { createOrder } from "../../api/orderApi";
 import OrderCreateDeliveryAddressTable from "../../components/orderManagement/OrderCreateDeliveryAddressTable";
+import { getDefaultDeliveryAddress } from "../../api/deliveryAddressApi";
 
 function OrderCreateProcess2() {
   const location = useLocation();
@@ -39,11 +40,28 @@ function OrderCreateProcess2() {
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (!selectedFundings.length) {
-      alert("잘못된 접근입니다.");
-      navigate("/orders/create-process1");
+    if (!selectedAddress && !previousFormData.deliveryName) {
+        getDefaultDeliveryAddress().then((defaultAddress) => {
+            setFormData((prevData) => ({
+                ...prevData,
+                receiverName: defaultAddress.receiverName,
+                receiverPhoneNumber: defaultAddress.receiverPhoneNumber,
+                deliveryName: defaultAddress.deliveryName,
+                zipcode: defaultAddress.zipCode,
+                address: defaultAddress.address,
+                detailAddress: defaultAddress.detailAddress,
+                deliveryMemo: defaultAddress.deliveryMemo,
+            }));
+        }).catch((error) => {
+            console.error("Error fetching default delivery address:", error);
+        });
     }
-  }, [selectedFundings, navigate]);
+    if (!selectedFundings.length) {
+        alert("잘못된 접근입니다.");
+        navigate("/orders/create-process1");
+    }
+}, [selectedAddress, previousFormData, selectedFundings, navigate]);
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
