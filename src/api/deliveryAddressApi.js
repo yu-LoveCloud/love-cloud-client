@@ -20,3 +20,23 @@ export const createDeliveryAddress = async (addressData) => {
     throw error;
     }
 };
+
+export const updateDeliveryAddress = async (addressId, addressData) => {
+    try {
+    const response = await apiClient.put(`/delivery-addresses/${addressId}`, addressData);
+    return response.data;
+    } catch (error) {
+    console.error("Error updating delivery-addresses:", error);
+    throw error;
+    }
+}
+
+export const getDeliveryAddress = async (addressId) => {
+    try {
+    const response = await apiClient.get(`/delivery-addresses/${addressId}`);
+    return response.data;
+    } catch (error) {
+    console.error("Error fetching delivery-address:", error);
+    throw error;
+    }
+}
