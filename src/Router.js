@@ -24,6 +24,7 @@ import FundingParticipate from "./pages/funding/FundingParticipate";
 import UserFundingList from "./pages/funding/UserFundingList";
 import DisconnectPartner from "./pages/Partner/DisconnectPartner";
 import DeliveryAddressList from "./pages/orderManagement/DeliveryAddressList";
+import DeliveryAddressAdd from "./pages/orderManagement/DeliveryAddressAdd";
 // import InvitationDetail from "./pages/invitation/InvitationDetail";
 
 function Router() {
@@ -70,6 +71,7 @@ function Router() {
       <Route path="/orders/create-process2" element={<OrderCreateProcess2 />} />
 
       <Route path="/delivery-addresses" element={<DeliveryAddressList />} />
+      <Route path="/delivery-addresses/create" element={<DeliveryAddressAdd />} />
 
       <Route path='/disconnectpartner' element={< DisconnectPartner/>} />
     </Routes>

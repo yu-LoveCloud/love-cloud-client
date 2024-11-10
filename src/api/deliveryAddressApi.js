@@ -10,3 +10,13 @@ export const getDeliveryAddressList = async () => {
       throw error;
     }
   };
+
+export const createDeliveryAddress = async (addressData) => {
+    try {
+    const response = await apiClient.post("/delivery-addresses", addressData);
+    return response.data;
+    } catch (error) {
+    console.error("Error creating delivery-addresses:", error);
+    throw error;
+    }
+};

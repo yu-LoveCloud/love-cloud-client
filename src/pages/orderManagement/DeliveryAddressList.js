@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getDeliveryAddressList } from '../../api/deliveryAddressApi';
 import AppContainer from '../../components/AppContainer';
 import NavigationBar from '../../components/Nav/NavigationBar';
@@ -12,6 +13,7 @@ import styled from 'styled-components';
 const DeliveryAddressList = () => {
     const [addresses, setAddresses] = useState([]);
     const [selectedAddressId, setSelectedAddressId] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         getDeliveryAddressList().then((data) => {
@@ -29,12 +31,16 @@ const DeliveryAddressList = () => {
         setSelectedAddressId(id);
     };
 
+    const handleAddAddress = () => {
+        navigate('/delivery-addresses/create');
+    };
+
     return (
         <AppContainer>
             <NavigationBar />
             <ContentContainer>
                 <Title>배송지 목록</Title>
-                <WhiteButton>배송지 추가하기</WhiteButton>
+                <WhiteButton onClick={handleAddAddress}>배송지 추가하기</WhiteButton>
                 <AddressList>
                     {addresses.map((address) => (
                         <AddressItem 
