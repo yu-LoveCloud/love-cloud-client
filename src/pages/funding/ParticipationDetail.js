@@ -38,8 +38,15 @@ const ParticipationDetail = () => {
         fetchParticipationData();
     }, [participationId]);
 
-    const handleCancelParticipation = () => {
-        alert('참여 취소가 요청되었습니다.');
+    const handleCancelParticipation = async () => {
+        try {
+            await apiClient.patch(`/participations/${participationId}/cancel`);
+            alert('참여가 성공적으로 취소되었습니다.');
+            navigate(`/user/participations`); // 취소 후 참여 목록으로 이동
+        } catch (error) {
+            console.error('참여 취소 실패:', error);
+            alert('참여 취소에 실패했습니다. 다시 시도해주세요.');
+        }
     };
 
     if (loading) {
