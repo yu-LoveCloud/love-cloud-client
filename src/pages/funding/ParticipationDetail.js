@@ -11,6 +11,7 @@ import { TopContainer, BackButton, CenterTitle } from '../../components/Header/H
 import ParticipationHeader from '../../components/funding/ParticipationHeader';
 import FundingCardComponent from '../../components/funding/FundingCardComponent';
 import { Divider } from '../../components/Common';
+import ParticipationDetailTable from '../../components/funding/ParticipationDetailTable';
 
 const ParticipationDetail = () => {
     const navigate = useNavigate();
@@ -38,7 +39,6 @@ const ParticipationDetail = () => {
     }, [participationId]);
 
     const handleCancelParticipation = () => {
-        // Handle participation cancellation logic here
         alert('참여 취소가 요청되었습니다.');
     };
 
@@ -79,38 +79,8 @@ const ParticipationDetail = () => {
                 <Divider />
 
                 {/* 참여 정보 */}
-                <ParticipationInfo>
-                    <InfoRow>
-                        <LeftSection>
-                            <Label>이름</Label>
-                        </LeftSection>
-                        <RightSection>{participation.name}</RightSection>
-                    </InfoRow>
-                    <InfoRow>
-                        <LeftSection>
-                            <Label>휴대폰 번호</Label>
-                        </LeftSection>
-                        <RightSection>{participation.phoneNumber}</RightSection>
-                    </InfoRow>
-                    <InfoRow>
-                        <LeftSection>
-                            <Label>이메일</Label>
-                        </LeftSection>
-                        <RightSection>{participation.email}</RightSection>
-                    </InfoRow>
-                    <InfoRow>
-                        <LeftSection>
-                            <Label>펀딩 금액</Label>
-                        </LeftSection>
-                        <RightSection>{participation.amount.toLocaleString()}원</RightSection>
-                    </InfoRow>
-                    <InfoRow>
-                        <LeftSection>
-                            <Label>응원 메시지</Label>
-                        </LeftSection>
-                        <RightSection>{participation.message}</RightSection>
-                    </InfoRow>
-                </ParticipationInfo>
+                <Label>참여 정보</Label>
+                <ParticipationDetailTable participation={participation} />
 
                 <ButtonWrapper>
                     <PurpleButton onClick={handleCancelParticipation}>참여 취소하기</PurpleButton>
@@ -153,18 +123,6 @@ const RightSection = styled.div`
 
 const FundingListContainer = styled.div`
     margin-top: 16px;
-`;
-
-const ParticipationInfo = styled.div`
-    padding: 16px;
-    font-size: 14px;
-    color: #333;
-`;
-
-const InfoRow = styled.div`
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
 `;
 
 const ButtonWrapper = styled.div`
