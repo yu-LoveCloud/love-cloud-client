@@ -9,6 +9,7 @@ import InvitationCardComponent from "../../components/invitation/InvitationCard"
 import { useNavigate } from "react-router-dom";
 import { getInvitationImageList } from "../../api/invitationApi";
 import { IMAGE_PREFIX } from "../../constants/global";
+import { ButtonWrapper } from "../../components/button/ButtonWrapper";
 const SelectBar = styled.div`
   width: 100%;
   height: 48px;
@@ -112,7 +113,9 @@ function InvitationCreateProcess1() {
         <InvitationCardComponent
           src={selectedImage ? selectedImage.url : null}
         ></InvitationCardComponent>
-        <PurpleButton onClick={handleNextClick}>다음</PurpleButton>
+        <ButtonWrapper>
+          <PurpleButton onClick={handleNextClick}>다음</PurpleButton>
+        </ButtonWrapper>
       </ContentContainer>
     </AppContainer>
   );
