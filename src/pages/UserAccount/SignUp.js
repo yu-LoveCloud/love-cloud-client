@@ -7,7 +7,7 @@ import ContentContainer from "../../components/ContentContainer";
 import PurpleButton from "../../components/button/PurpleButton";
 import { Title } from "../../components/Typography";
 import { ButtonWrapper } from "../../components/button/ButtonWrapper";
-import axios from "axios";
+import { apiClient } from '../../api/apiClient';
 
 const Input = styled.input`
   width: 100%;
@@ -62,68 +62,32 @@ function SignUp() {
     e.preventDefault();
     if (!checkPasswordsMatch()) return;
 
-    console.log(
-      JSON.stringify({
-        email: data.email,
-        name: data.name,
-        phoneNumber: data.phoneNumber,
-        password: data.password,
-        weddingRole: data.weddingRole,
-      })
-    );
+    const signUpData = {
+      email: data.email,
+      name: data.name,
+      phoneNumber: data.phoneNumber,
+      password: data.password,
+      weddingRole: data.weddingRole,
+    };
 
-    if (data.weddingRole === "GUEST") {
-      axios
-        .post(
-          "http://localhost:8080/auth/guest/sign-up",
-          {
-            email: data.email,
-            name: data.name,
-            phoneNumber: data.phoneNumber,
-            password: data.password,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((res) => {
-          alert("환영합니다!");
-          navigate("/loginform");
-        })
-        .catch((error) => {
-          console.log("Error status:", error.response.status);
-          console.log("Error data:", error.response.data);
-          alert("다시 입력해주세요");
-        });
-    } else {
-      axios
-        .post(
-          "http://localhost:8080/auth/wedding-user/sign-up",
-          {
-            email: data.email,
-            name: data.name,
-            phoneNumber: data.phoneNumber,
-            password: data.password,
-            weddingRole: data.weddingRole,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((res) => {
-          alert("환영합니다!");
-          navigate("/loginform");
-        })
-        .catch((error) => {
-          console.log("Error status:", error);
-          //   console.log("Error data:", error.response.data);
-          alert("다시 입력해주세요");
-        });
-    }
+    const url = data.weddingRole === "GUEST" 
+      ? "/auth/guest/sign-up" 
+      : "/auth/wedding-user/sign-up";
+
+    apiClient.post(url, signUpData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+    .then((res) => {
+      alert("환영합니다!");
+      navigate("/loginform");
+    })
+    .catch((error) => {
+      console.log("Error status:", error.response.status);
+      console.log("Error data:", error.response.data);
+      alert("다시 입력해주세요");
+    });
   };
 
   return (
