@@ -5,13 +5,30 @@ import { Subtitle, Title } from "../../components/Typography";
 import InvitationCard from "../../components/invitation/InvitationCard";
 import PurpleButton from "../../components/button/PurpleButton";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getMyInvitation } from "../../api/invitationApi";
+import { IMAGE_PREFIX } from "../../constants/global";
+import WhiteButton from "../../components/button/WhiteButton";
 
 function InvitationDashboard() {
   const navigate = useNavigate();
+  const [invitation, setInvitation] = useState(null);
+
+  useEffect(() => {
+    getMyInvitation()
+      .then((data) => {
+        setInvitation(data);
+        // console.log(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching my invitation:", error);
+      });
+  }, []);
 
   const handleCreateInvitation = () => {
     navigate("/invitations/create-process1"); // '/create' 경로로 이동
   };
+
   return (
     <AppContainer>
       <NavigationBar />
@@ -22,13 +39,26 @@ function InvitationDashboard() {
         </Subtitle>
         <InvitationCard
           src={
-            "https://d2v80xjmx68n4w.cloudfront.net/gigs/rate/AwJVF1609941206.jpg"
+            invitation
+              ? `${IMAGE_PREFIX}${invitation.invitationImageName}`
+              : null
           }
-          popUp={true}
+          popUp={false}
         ></InvitationCard>
-        <PurpleButton onClick={handleCreateInvitation}>
-          청첩장 생성하기
-        </PurpleButton>
+
+        {invitation && <WhiteButton>청첩장 삭제하기</WhiteButton>}
+
+        {invitation ? (
+          <PurpleButton
+            onClick={() => navigate(`/invitations/${invitation.invitationId}`)}
+          >
+            청첩장 편집하기
+          </PurpleButton>
+        ) : (
+          <PurpleButton onClick={handleCreateInvitation}>
+            청첩장 생성하기
+          </PurpleButton>
+        )}
       </ContentContainer>
     </AppContainer>
   );
