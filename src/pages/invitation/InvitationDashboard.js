@@ -2,13 +2,13 @@ import AppContainer from "../../components/AppContainer";
 import ContentContainer from "../../components/ContentContainer";
 import NavigationBar from "../../components/Nav/NavigationBar";
 import { Subtitle, Title } from "../../components/Typography";
-import InvitationCard from "../../components/invitation/InvitationCard";
 import PurpleButton from "../../components/button/PurpleButton";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { getMyInvitation } from "../../api/invitationApi";
+import { deleteInvitation, getMyInvitation } from "../../api/invitationApi";
 import { IMAGE_PREFIX } from "../../constants/global";
 import WhiteButton from "../../components/button/WhiteButton";
+import InvitationCardComponent from "../../components/invitation/InvitationCard";
 
 function InvitationDashboard() {
   const navigate = useNavigate();
@@ -28,6 +28,22 @@ function InvitationDashboard() {
     navigate("/invitations/create-process1"); // '/create' 경로로 이동
   };
 
+  const handleDeleteInvitation = () => {
+    deleteInvitation()
+      .then(() => {
+        setInvitation(null);
+      })
+      .catch((error) => {
+        console.error("Error deleting invitation:", error);
+      });
+  };
+
+  const handleCardClick = () => {
+    if (invitation) {
+      navigate(`/invitations/${invitation.invitationId}`);
+    }
+  };
+
   return (
     <AppContainer>
       <NavigationBar />
@@ -36,16 +52,21 @@ function InvitationDashboard() {
         <Subtitle>
           새로운 모바일 청첩장을 생성하거나 내 청첩장을 편집할 수 있습니다.
         </Subtitle>
-        <InvitationCard
+        <InvitationCardComponent
           src={
             invitation
               ? `${IMAGE_PREFIX}${invitation.invitationImageName}`
               : null
           }
           popUp={false}
-        ></InvitationCard>
+          onClick={handleCardClick}
+        ></InvitationCardComponent>
 
-        {invitation && <WhiteButton>청첩장 삭제하기</WhiteButton>}
+        {invitation && (
+          <WhiteButton onClick={handleDeleteInvitation}>
+            청첩장 삭제하기
+          </WhiteButton>
+        )}
 
         {invitation ? (
           <PurpleButton
