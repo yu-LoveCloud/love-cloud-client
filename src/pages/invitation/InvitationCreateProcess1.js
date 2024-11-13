@@ -7,6 +7,8 @@ import styled from "styled-components";
 import { useEffect, useRef, useState } from "react";
 import InvitationCardComponent from "../../components/invitation/InvitationCard";
 import { useNavigate } from "react-router-dom";
+import { getInvitationImageList } from "../../api/invitationApi";
+import { IMAGE_PREFIX } from "../../constants/global";
 const SelectBar = styled.div`
   width: 100%;
   height: 48px;
@@ -39,22 +41,13 @@ function InvitationCreateProcess1() {
 
   useEffect(() => {
     // 서버로부터 이미지 데이터를 가져오는 코드
-    // 예시 데이터로 간단한 URL 배열을 사용합니다.
-    const fetchData = async () => {
-      const imagedatas = [
-        { id: 1, url: "https://via.placeholder.com/48" },
-        { id: 2, url: "https://via.placeholder.com/84" },
-        { id: 3, url: "https://via.placeholder.com/48" },
-        { id: 4, url: "https://via.placeholder.com/48" },
-        { id: 5, url: "https://via.placeholder.com/48" },
-        { id: 6, url: "https://via.placeholder.com/48" },
-        { id: 7, url: "https://via.placeholder.com/48" },
-        // 필요한 만큼 이미지 URL 추가
-      ];
-      setImages(imagedatas);
-    };
-
-    fetchData();
+    getInvitationImageList()
+      .then((data) => {
+        setImages(data.invitationImages);
+      })
+      .catch((error) => {
+        console.error("Error fetching invitation images:", error);
+      });
   }, []);
 
   const handleImageButtonClick = (id, url) => {
@@ -106,11 +99,13 @@ function InvitationCreateProcess1() {
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
         >
-          {images.map(({ id, url }) => (
+          {images.map(({ id, imageName }) => (
             <ImageButton
               key={id}
-              style={{ backgroundImage: `url(${url})` }}
-              onClick={() => handleImageButtonClick(id, url)}
+              style={{ backgroundImage: `url(${IMAGE_PREFIX}${imageName})` }}
+              onClick={() =>
+                handleImageButtonClick(id, `${IMAGE_PREFIX}${imageName}`)
+              }
             />
           ))}
         </SelectBar>
