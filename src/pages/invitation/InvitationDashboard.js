@@ -18,7 +18,6 @@ function InvitationDashboard() {
     getMyInvitation()
       .then((data) => {
         setInvitation(data);
-        // console.log(data);
       })
       .catch((error) => {
         console.error("Error fetching my invitation:", error);
