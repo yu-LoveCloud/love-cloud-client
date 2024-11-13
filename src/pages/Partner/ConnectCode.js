@@ -1,11 +1,13 @@
 import React, { useState , useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from "styled-components";
+import axios from "axios";
 import AppContainer from "../../components/AppContainer";
 import NavigationBar from '../../components/Nav/NavigationBar';
 import ContentContainer from '../../components/ContentContainer';
 import PurpleButton from '../../components/button/PurpleButton';
 import { ButtonWrapper } from '../../components/button/ButtonWrapper';
+import { getCookie } from '../../Cookie';
 
 const Title = styled.h2`
   color: #000000;
@@ -68,6 +70,8 @@ const ConnectCode = () => {
   const [isInputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const inputRef = useRef(null);
+  const accessToken = getCookie("access_token");
+  const navigate = useNavigate();
 
   const handleCodeClick = () => {
     setInputVisible(true);
@@ -85,6 +89,23 @@ const ConnectCode = () => {
   const handleChange = (e) => {
     setInputValue(e.target.value);
   };
+
+  const handleConnect = async () => {
+    try {
+      const response = await axios.post('http://localhost:8080/couples', {
+        invitationCode: inputValue,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${accessToken}`
+        }
+      });
+      window.alert("커플 등록을 완료했습니다.");
+      navigate("/");
+    } catch (error) {
+          console.error("커플 등록에 실패했습니다.");
+          window.alert("커플 등록에 실패했습니다.");
+    }
+  }
 
   return (
     <AppContainer>
@@ -108,8 +129,7 @@ const ConnectCode = () => {
           )}
         </CodeContainer>
             <ButtonWrapper>
-            <Link to="/"></Link>
-            <PurpleButton>파트너 연결하기</PurpleButton>
+              <PurpleButton onClick={handleConnect}>파트너 연결하기</PurpleButton>
             </ButtonWrapper>
         </ContentContainer>
         </AppContainer>
