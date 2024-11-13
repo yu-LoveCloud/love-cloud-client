@@ -26,7 +26,7 @@ import DisconnectPartner from "./pages/Partner/DisconnectPartner";
 import DeliveryAddressList from "./pages/orderManagement/DeliveryAddressList";
 import DeliveryAddressAdd from "./pages/orderManagement/DeliveryAddressAdd";
 import DeliveryAddressUpdate from "./pages/orderManagement/DeliveryAddressUpdate";
-// import InvitationDetail from "./pages/invitation/InvitationDetail";
+import InvitationDetail from "./pages/invitation/InvitationDetail";
 
 function Router() {
   return (
@@ -43,7 +43,7 @@ function Router() {
         path="/invitations/create-process2"
         element={<InvitationCreateProcess2 />}
       />
-      {/* <Route path="/invitations/:id" element={<InvitationDetail />} /> */}
+      <Route path="/invitations/:id" element={<InvitationDetail />} />
 
       <Route path="/changepassword" element={<ChangePassword />} />
       <Route path="/refundaccount" element={<RefundAccount />} />
@@ -72,10 +72,16 @@ function Router() {
       <Route path="/orders/create-process2" element={<OrderCreateProcess2 />} />
 
       <Route path="/delivery-addresses" element={<DeliveryAddressList />} />
-      <Route path="/delivery-addresses/create" element={<DeliveryAddressAdd />} />
-      <Route path="/delivery-addresses/:id" element={<DeliveryAddressUpdate />} />
+      <Route
+        path="/delivery-addresses/create"
+        element={<DeliveryAddressAdd />}
+      />
+      <Route
+        path="/delivery-addresses/:id"
+        element={<DeliveryAddressUpdate />}
+      />
 
-      <Route path='/disconnectpartner' element={< DisconnectPartner/>} />
+      <Route path="/disconnectpartner" element={<DisconnectPartner />} />
     </Routes>
   );
 }
