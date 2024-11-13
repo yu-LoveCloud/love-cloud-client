@@ -9,6 +9,7 @@ import { deleteInvitation, getMyInvitation } from "../../api/invitationApi";
 import { IMAGE_PREFIX } from "../../constants/global";
 import WhiteButton from "../../components/button/WhiteButton";
 import InvitationCardComponent from "../../components/invitation/InvitationCard";
+import { ButtonWrapper } from "../../components/button/ButtonWrapper";
 
 function InvitationDashboard() {
   const navigate = useNavigate();
@@ -61,24 +62,27 @@ function InvitationDashboard() {
           popUp={false}
           onClick={handleCardClick}
         ></InvitationCardComponent>
+        <ButtonWrapper>
+          {invitation && (
+            <WhiteButton onClick={handleDeleteInvitation}>
+              청첩장 삭제하기
+            </WhiteButton>
+          )}
 
-        {invitation && (
-          <WhiteButton onClick={handleDeleteInvitation}>
-            청첩장 삭제하기
-          </WhiteButton>
-        )}
-
-        {invitation ? (
-          <PurpleButton
-            onClick={() => navigate(`/invitations/${invitation.invitationId}`)}
-          >
-            청첩장 편집하기
-          </PurpleButton>
-        ) : (
-          <PurpleButton onClick={handleCreateInvitation}>
-            청첩장 생성하기
-          </PurpleButton>
-        )}
+          {invitation ? (
+            <PurpleButton
+              onClick={() =>
+                navigate(`/invitations/${invitation.invitationId}`)
+              }
+            >
+              청첩장 편집하기
+            </PurpleButton>
+          ) : (
+            <PurpleButton onClick={handleCreateInvitation}>
+              청첩장 생성하기
+            </PurpleButton>
+          )}
+        </ButtonWrapper>
       </ContentContainer>
     </AppContainer>
   );

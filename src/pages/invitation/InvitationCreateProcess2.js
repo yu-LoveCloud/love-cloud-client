@@ -13,14 +13,12 @@ import {
 import { useEffect, useState } from "react";
 import PurpleButton from "../../components/button/PurpleButton";
 import { createInvitation } from "../../api/invitationApi";
+import { ButtonWrapper } from "../../components/button/ButtonWrapper";
 
 function InvitationCreateProcess2() {
   const location = useLocation();
   const navigate = useNavigate();
   const { selectedImage } = location.state || {};
-  // const [weddingDateTime, setWeddingDateTime] = useState("");
-  // const [place, setPlace] = useState("");
-  // const [content, setContent] = useState("");
   const [formData, setFormData] = useState({
     invitationImageId: selectedImage.id,
     weddingDateTime: "",
@@ -90,9 +88,10 @@ function InvitationCreateProcess2() {
             onChange={handleChange}
             placeholder="전달할 말을 입력해주세요."
           ></TextArea>
-
-          <PurpleButton onClick={handleCreateInvitation}>생성하기</PurpleButton>
         </OrderedListContainer>
+        <ButtonWrapper>
+          <PurpleButton onClick={handleCreateInvitation}>생성하기</PurpleButton>
+        </ButtonWrapper>
       </ContentContainer>
     </AppContainer>
   );
