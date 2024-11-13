@@ -77,8 +77,9 @@ function MyPage() {
         })
         .then(res => {
             console.log('Logged out successfully:', res.data);
-            removeCookie("access_token");
-            removeCookie('refresh_token');
+            removeCookie("accessToken");
+            removeCookie('refreshToken');
+            removeCookie('username');
             navigate('/'); // 로그아웃 성공시 메인으로 이동
             window.alert("로그아웃 되었습니다.");
 
