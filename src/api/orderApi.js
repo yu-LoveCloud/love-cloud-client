@@ -28,3 +28,13 @@ export const getOrderList = async () => {
     throw error;
   }
 };
+
+export const cancelOrder = async (orderId) => {
+  try {
+    const response = await apiClient.patch(`/orders/${orderId}/cancel`);
+    return response.data;
+  } catch (error) {
+    console.error("Error canceling order:", error);
+    throw error;
+  }
+};
