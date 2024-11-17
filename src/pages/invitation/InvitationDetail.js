@@ -1,48 +1,71 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import AppContainer from "../../components/AppContainer";
 import NavigationBar from "../../components/Nav/NavigationBar";
 import ContentContainer from "../../components/ContentContainer";
-import { Title } from "../../components/Typography";
 import WhiteButton from "../../components/button/WhiteButton";
 import PurpleButton from "../../components/button/PurpleButton";
 import InvitationCardComponent from "../../components/invitation/InvitationCard";
 import styled from "styled-components";
+import { useEffect, useState } from "react";
+import { getInvitation } from "../../api/invitationApi";
+import { IMAGE_PREFIX } from "../../constants/global";
 
 function InvitationDetail() {
   const { id } = useParams();
-  // const { data } = useQuery(["invitation", id], () => apiClient.get(`/invitations/${id}`));
-  const data = {
-    invitation: {
-      invitationId: 0,
-      coupleId: 0,
-      groomName: "문동은",
-      brideName: "박연진",
-      weddingDateTime: "2024-01-01 12:00:00",
-      weddingPlace: "서울시 강남구 삼성동 123-456",
-      content:
-        "안녕하세요. 문동은입니다. 잘 부탁드립니다. 감사합니다. 안녕하세요. 문동은입니다. 잘 부탁드립니다. 감사합니다. 안녕하세요. 문동은입니다. 잘 부탁드립니다. 감사합니다. 안녕하세요. 문동은입니다. 잘 부탁드립니다. 감사합니다.",
-      invitationImageName:
-        "https://d2v80xjmx68n4w.cloudfront.net/gigs/rate/AwJVF1609941206.jpg",
-    },
+  const [invitation, setInvitation] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    getInvitation(id)
+      .then((data) => {
+        setInvitation(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching invitation:", error);
+      });
+  }, [id]);
+
+  const handleShareClick = () => {
+    navigator.clipboard
+      .writeText(window.location.href)
+      .then(() => {
+        alert("URL이 클립보드에 복사되었습니다.");
+      })
+      .catch((error) => {
+        console.error("클립보드 복사 실패:", error);
+      });
   };
+
+  const handleFundingClick = () => {
+    navigate(`/couples/${invitation.coupleId}/fundings`);
+  };
+
   return (
     <AppContainer>
       <NavigationBar />
       <ContentContainer>
-        <InvitationCardComponent src={data.invitation.invitationImageName} />
-        <InvitationInfoWrapper>
-          <CoupleName>
-            {data.invitation.groomName} - {data.invitation.brideName}
-          </CoupleName>
+        {invitation ? (
+          <>
+            <InvitationCardComponent
+              src={`${IMAGE_PREFIX}${invitation.invitationImageName}`}
+            />
+            <InvitationInfoWrapper>
+              <CoupleName>
+                {invitation.groomName} - {invitation.brideName}
+              </CoupleName>
 
-          <Details>{data.invitation.weddingPlace}</Details>
-          <Details>{data.invitation.weddingDateTime}</Details>
-          <Content>{data.invitation.content}</Content>
-        </InvitationInfoWrapper>
-        <ButtonContainer>
-          <WhiteButton>공유하기</WhiteButton>
-          <PurpleButton>펀딩하기</PurpleButton>
-        </ButtonContainer>
+              <Details>{invitation.weddingPlace}</Details>
+              <Details>{invitation.weddingDateTime}</Details>
+              <Content>{invitation.content}</Content>
+            </InvitationInfoWrapper>
+            <ButtonContainer>
+              <WhiteButton onClick={handleShareClick}>공유하기</WhiteButton>
+              <PurpleButton onClick={handleFundingClick}>펀딩하기</PurpleButton>
+            </ButtonContainer>
+          </>
+        ) : (
+          <h2>존재하지 않는 페이지입니다.</h2>
+        )}
       </ContentContainer>
     </AppContainer>
   );

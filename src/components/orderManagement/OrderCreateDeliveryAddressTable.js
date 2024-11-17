@@ -1,7 +1,8 @@
 import React from "react";
 import styled from "styled-components";
 
-function OrderDetailTable({ deliveryInfo, onMemoChange, editable = false }) {
+function OrderCreateDeliveryAddressTable({ deliveryInfo, onMemoChange, editable = false }) {
+
   return (
     <Table>
       <tbody>
@@ -22,7 +23,7 @@ function OrderDetailTable({ deliveryInfo, onMemoChange, editable = false }) {
           <Td>
             {`${deliveryInfo.address}`}
             <br />
-            {`${deliveryInfo.addressDetail} (${deliveryInfo.zipCode})`}
+            {`${deliveryInfo.detailAddress} (${deliveryInfo.zipcode})`}
           </Td>
         </tr>
         <tr>
@@ -45,7 +46,7 @@ function OrderDetailTable({ deliveryInfo, onMemoChange, editable = false }) {
   );
 }
 
-export default OrderDetailTable;
+export default OrderCreateDeliveryAddressTable;
 
 const Table = styled.table`
   width: 100%;
