@@ -1,0 +1,312 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import NavigationBar from '../../components/Nav/NavigationBar';
+import ContentContainer from '../../components/ContentContainer';
+import { ButtonWrapper } from '../../components/button/ButtonWrapper';
+import PurpleButton from '../../components/button/PurpleButton';
+import { Title, Input, SectionTitle, Hr } from '../../components/Typography';
+import AppContainer from '../../components/AppContainer';
+import styled from 'styled-components';
+import { getDeliveryAddress, updateDeliveryAddress } from '../../api/deliveryAddressApi';
+
+const DeliveryAddressUpdate = () => {
+    const [address, setAddress] = useState({
+        deliveryName: '',
+        zipCode: '',
+        address: '',
+        detailAddress: '',
+        deliveryMemo: '',
+        receiverName: '',
+        receiverPhoneNumber: '',
+        isDefault: false,
+    });
+    const [errors, setErrors] = useState({});
+    const { id } = useParams();
+    const detailAddressRef = useRef(null);
+    const navigate = useNavigate();
+    const location = useLocation(); 
+
+    const { selectedFundings, previousFormData } = location.state || {};
+
+    useEffect(() => {
+        getDeliveryAddress(id).then((data) => {
+            setAddress({
+                deliveryName: data.deliveryName,
+                zipCode: data.zipCode,
+                address: data.address,
+                detailAddress: data.detailAddress,
+                deliveryMemo: data.deliveryMemo,
+                receiverName: data.receiverName,
+                receiverPhoneNumber: data.receiverPhoneNumber,
+                isDefault: data.isDefault,
+            });
+        }).catch((error) => {
+            console.error("Error fetching delivery address:", error);
+        });
+
+        const script = document.createElement('script');
+        script.src = '//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+        script.async = true;
+        document.body.appendChild(script);
+
+        return () => {
+            document.body.removeChild(script);
+        };
+    }, [id]);
+
+    const handleComplete = (data) => {
+        let addr = data.userSelectedType === 'R' ? data.roadAddress : data.jibunAddress;
+        let extraAddr = '';
+
+        if (data.userSelectedType === 'R') {
+            if (data.bname && /[동|로|가]$/g.test(data.bname)) extraAddr += data.bname;
+            if (data.buildingName && data.apartment === 'Y') extraAddr += (extraAddr ? `, ${data.buildingName}` : data.buildingName);
+            if (extraAddr) extraAddr = ` (${extraAddr})`;
+        }
+
+        setAddress((prev) => ({
+            ...prev,
+            zipCode: data.zonecode,
+            address: addr,
+            extraAddress: extraAddr,
+        }));
+
+        detailAddressRef.current?.focus();
+    };
+
+    const handleSearch = () => {
+        new window.daum.Postcode({ oncomplete: handleComplete }).open();
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setAddress((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+
+        // Validate phone number format for receiverPhoneNumber
+        if (name === 'receiverPhoneNumber') {
+            const phoneRegex = /^010-\d{4}-\d{4}$/;
+            setErrors((prevErrors) => ({
+                ...prevErrors,
+                receiverPhoneNumber: phoneRegex.test(value) ? '' : '전화번호 형식은 010-1234-5678입니다.',
+            }));
+        }
+    };
+
+    const handleCheckboxChange = () => {
+        setAddress((prev) => ({
+            ...prev,
+            isDefault: !prev.isDefault,
+        }));
+    };
+
+    const validateForm = () => {
+        const newErrors = {};
+        if (!address.deliveryName) newErrors.deliveryName = '배송지 별칭을 입력해 주세요.';
+        if (!address.zipCode) newErrors.zipCode = '우편번호를 입력해 주세요.';
+        if (!address.address) newErrors.address = '주소를 입력해 주세요.';
+        if (!address.detailAddress) newErrors.detailAddress = '상세주소를 입력해 주세요.';
+        if (!address.receiverName) newErrors.receiverName = '수취인명을 입력해 주세요.';
+        const phoneRegex = /^010-\d{4}-\d{4}$/;
+        if (!phoneRegex.test(address.receiverPhoneNumber)) {
+            newErrors.receiverPhoneNumber = '전화번호 형식은 010-1234-5678입니다.';
+        }
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        if (!validateForm()) return;
+
+        updateDeliveryAddress(id, address).then(() => {
+            navigate('/delivery-addresses', {
+                state: {
+                    selectedFundings,
+                    previousFormData,
+                }
+            });
+        }).catch((error) => {
+            console.error('Error updating delivery address:', error);
+        });
+    };
+
+    return (
+        <AppContainer>
+            <NavigationBar />
+            <ContentContainer>
+                <Title>배송지 수정</Title>
+                <Hr />
+                <Form onSubmit={handleSubmit}>
+                    <SectionTitle>배송지 정보</SectionTitle>
+                    <InputGroup>
+                        <Label>배송지 별칭</Label>
+                        <Input
+                            type="text"
+                            name="deliveryName"
+                            value={address.deliveryName}
+                            onChange={handleChange}
+                            placeholder="예) 집, 회사"
+                            required
+                        />
+                        {errors.deliveryName && <Error>{errors.deliveryName}</Error>}
+                    </InputGroup>
+                    <InputGroup>
+                        <Label>우편번호</Label>
+                        <InputWrapper>
+                            <Input
+                                type="text"
+                                name="zipCode"
+                                value={address.zipCode}
+                                placeholder="우편번호"
+                                readOnly
+                            />
+                            <Button type="button" onClick={handleSearch}>
+                                우편번호 찾기
+                            </Button>
+                        </InputWrapper>
+                        {errors.zipCode && <Error>{errors.zipCode}</Error>}
+                    </InputGroup>
+                    <InputGroup>
+                        <Label>주소</Label>
+                        <Input
+                            type="text"
+                            name="address"
+                            value={address.address}
+                            placeholder="주소"
+                            readOnly
+                        />
+                        {errors.address && <Error>{errors.address}</Error>}
+                    </InputGroup>
+                    <InputGroup>
+                        <Label>상세주소</Label>
+                        <Input
+                            type="text"
+                            name="detailAddress"
+                            value={address.detailAddress}
+                            onChange={handleChange}
+                            placeholder="상세주소"
+                            ref={detailAddressRef}
+                            required
+                        />
+                        {errors.detailAddress && <Error>{errors.detailAddress}</Error>}
+                    </InputGroup>
+                    <InputGroup>
+                        <Label>배송 메모</Label>
+                        <TextArea
+                            name="deliveryMemo"
+                            value={address.deliveryMemo}
+                            onChange={handleChange}
+                            placeholder="예) 부재 시 경비실에 맡겨주세요."
+                        />
+                    </InputGroup>
+                    <SectionTitle>수취인 정보</SectionTitle>
+                    <InputGroup>
+                        <Label>수취인명</Label>
+                        <Input
+                            type="text"
+                            name="receiverName"
+                            value={address.receiverName}
+                            onChange={handleChange}
+                            placeholder="예) 홍길동"
+                            required
+                        />
+                        {errors.receiverName && <Error>{errors.receiverName}</Error>}
+                    </InputGroup>
+                    <InputGroup>
+                        <Label>연락처</Label>
+                        <Input
+                            type="text"
+                            name="receiverPhoneNumber"
+                            value={address.receiverPhoneNumber}
+                            onChange={handleChange}
+                            placeholder="010-1234-5678"
+                            required
+                        />
+                        {errors.receiverPhoneNumber && <Error>{errors.receiverPhoneNumber}</Error>}
+                    </InputGroup>
+                    <InputGroup>
+                        <CheckboxLabel>
+                            <Checkbox
+                                type="checkbox"
+                                name="isDefault"
+                                checked={address.isDefault}
+                                onChange={handleCheckboxChange}
+                            />
+                            기본 배송지로 설정
+                        </CheckboxLabel>
+                    </InputGroup>
+                    <ButtonWrapper>
+                        <PurpleButton type="submit">주소 수정</PurpleButton>
+                    </ButtonWrapper>
+                </Form>
+            </ContentContainer>
+        </AppContainer>
+    );
+};
+
+export default DeliveryAddressUpdate;
+
+// 스타일 컴포넌트
+const Form = styled.form`
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 60px;
+`;
+
+const InputGroup = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
+
+const Label = styled.label`
+    font-size: 14px;
+    color: #767676;
+    margin-bottom: 4px;
+`;
+
+const InputWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 8px;
+`;
+
+const Button = styled.button`
+    padding: 8px 12px;
+    background-color: #4c3073;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 12px;
+    &:hover {
+        background-color: #3b255b;
+    }
+`;
+
+const CheckboxLabel = styled(Label)`
+    display: flex;
+    align-items: center;
+`;
+
+const Checkbox = styled.input`
+    margin-right: 8px;
+`;
+
+const TextArea = styled(Input).attrs({ as: "textarea" })`
+    height: 80px;
+    resize: none;
+    padding: 12px;
+    font-size: 12px;
+    margin-top: 4px;
+`;
+
+const Error = styled.div`
+    color: red;
+    font-size: 12px;
+    margin-top: -10px;
+    margin-bottom: 10px;
+`;

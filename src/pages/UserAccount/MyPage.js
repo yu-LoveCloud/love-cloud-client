@@ -106,9 +106,6 @@ function MyPage() {
                     <MenuList>
                         <div onClick={isCouple}>파트너 관리 페이지</div>
                     </MenuList>
-                    {/* <MenuList>
-                        <Link to='/refundaccount' style={{color: 'inherit' , textDecoration: 'none' }}>환불 계좌 등록하기</Link>
-                    </MenuList> */}
                     <MenuList>
                         <Link to='/' style={{color: 'inherit' , textDecoration: 'none'}}>배송지 관리하기</Link>
                     </MenuList>
