@@ -5,7 +5,6 @@ import SignUp from "./pages/UserAccount/SignUp";
 import InvitationCreateProcess1 from "./pages/invitation/InvitationCreateProcess1";
 import InvitationCreateProcess2 from "./pages/invitation/InvitationCreateProcess2";
 import ChangePassword from "./pages/UserAccount/ChangePassword";
-import RefundAccount from "./pages/UserAccount/RefundAccount";
 import PartnerConnect from "./pages/Partner/PartnerConnect";
 import ConnectCode from "./pages/Partner/ConnectCode";
 import MyPage from "./pages/UserAccount/MyPage";
@@ -47,7 +46,6 @@ function Router() {
       <Route path="/invitations/:id" element={<InvitationDetail />} />
 
       <Route path="/changepassword" element={<ChangePassword />} />
-      <Route path="/refundaccount" element={<RefundAccount />} />
       <Route path="/partnerconnect" element={<PartnerConnect />} />
       <Route path="/connectcode" element={<ConnectCode />} />
       <Route path="/mypage" element={<MyPage />} />
