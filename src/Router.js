@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
 import InvitationDashboard from "./pages/invitation/InvitationDashboard";
 import LoginForm from "./pages/UserAccount/LoginForm";
 import SignUp from "./pages/UserAccount/SignUp";
@@ -28,7 +27,7 @@ import DeliveryAddressAdd from "./pages/orderManagement/DeliveryAddressAdd";
 import DeliveryAddressUpdate from "./pages/orderManagement/DeliveryAddressUpdate";
 import ParticipationList from "./pages/funding/ParticipationList";
 import ParticipationDetail from "./pages/funding/ParticipationDetail";
-// import InvitationDetail from "./pages/invitation/InvitationDetail";
+import InvitationDetail from "./pages/invitation/InvitationDetail";
 
 function Router() {
   return (
@@ -37,9 +36,15 @@ function Router() {
       <Route path="/loginform" element={<LoginForm />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/invitations" element={<InvitationDashboard />} />
-      <Route path="/invitations/create-process1" element={<InvitationCreateProcess1 />} />
-      <Route path="/invitations/create-process2" element={<InvitationCreateProcess2 />} />
-      {/* <Route path="/invitations/:id" element={<InvitationDetail />} /> */}
+      <Route
+        path="/invitations/create-process1"
+        element={<InvitationCreateProcess1 />}
+      />
+      <Route
+        path="/invitations/create-process2"
+        element={<InvitationCreateProcess2 />}
+      />
+      <Route path="/invitations/:id" element={<InvitationDetail />} />
 
       <Route path="/changepassword" element={<ChangePassword />} />
       <Route path="/refundaccount" element={<RefundAccount />} />
@@ -50,13 +55,22 @@ function Router() {
 
       <Route path="/products" element={<ProductList />} />
       <Route path="/items/:productOptionsId" element={<ProductDetail />} />
-      <Route path="/funding/create/:productOptionsId" element={<FundingCreate />} />
+      <Route
+        path="/funding/create/:productOptionsId"
+        element={<FundingCreate />}
+      />
       <Route path="/user/fundings" element={<UserFundingList />} />
       <Route path="/couples/:coupleId/fundings" element={<FundingList />} />
       <Route path="/fundings/:fundingId" element={<FundingDetail />} />
-      <Route path="/fundings/:fundingId/participate" element={<FundingParticipate />} />
+      <Route
+        path="/fundings/:fundingId/participate"
+        element={<FundingParticipate />}
+      />
       <Route path="/user/participations" element={<ParticipationList />} />
-      <Route path="/participations/:participationId" element={<ParticipationDetail />} />
+      <Route
+        path="/participations/:participationId"
+        element={<ParticipationDetail />}
+      />
 
       <Route path="/orders/:orderId" element={<DetailOrder />} />
       <Route path="/orders" element={<ListOrder />} />
@@ -64,8 +78,14 @@ function Router() {
       <Route path="/orders/create-process2" element={<OrderCreateProcess2 />} />
 
       <Route path="/delivery-addresses" element={<DeliveryAddressList />} />
-      <Route path="/delivery-addresses/create" element={<DeliveryAddressAdd />} />
-      <Route path="/delivery-addresses/:id" element={<DeliveryAddressUpdate />} />
+      <Route
+        path="/delivery-addresses/create"
+        element={<DeliveryAddressAdd />}
+      />
+      <Route
+        path="/delivery-addresses/:id"
+        element={<DeliveryAddressUpdate />}
+      />
 
       <Route path="/disconnectpartner" element={<DisconnectPartner />} />
     </Routes>

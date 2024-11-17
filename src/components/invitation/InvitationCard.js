@@ -9,6 +9,9 @@ const InvitationCard = styled.div`
   border: 1px solid #d9d9d9;
   position: relative;
 
+  /* onClick이 있는 경우에만 cursor: pointer */
+  cursor: ${(props) => (props.onClick ? "pointer" : "default")};
+
   ${(props) =>
     !props.hasImage &&
     `
@@ -69,9 +72,13 @@ const TextWrapper = styled.div`
   color: #767676;
   letter-spacing: calc(16px * -0.025);
 `;
-export default function InvitationCardComponent({ src, popUp = false }) {
+export default function InvitationCardComponent({
+  src,
+  popUp = false,
+  onClick,
+}) {
   return (
-    <InvitationCard hasImage={!!src}>
+    <InvitationCard onClick={onClick} hasImage={!!src}>
       {src && <Image src={src} alt="Invitation Card Image" />}
       {popUp && (
         <PopUp>
