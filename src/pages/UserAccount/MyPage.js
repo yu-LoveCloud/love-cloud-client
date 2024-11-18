@@ -5,19 +5,19 @@ import AppContainer from '../../components/AppContainer';
 import NavigationBar from '../../components/Nav/NavigationBar';
 import ContentContainer from '../../components/ContentContainer';
 import WhiteButton from '../../components/button/WhiteButton';
-import { Title } from "../../components/Typography";
+import { Title } from '../../components/Typography';
 import { getCookie, removeCookie } from '../../Cookie';
 import { apiClient } from '../../api/apiClient';
 import { ButtonWrapper } from '../../components/button/ButtonWrapper';
 
 const Menu = styled.div`
-  margin-top: 30px;
-  width: 100%;
+    margin-top: 30px;
+    width: 100%;
 `;
 
 const MenuList = styled.div`
-  border-bottom: 2px solid #DFDFDF;
-  padding: 10px;
+    border-bottom: 2px solid #dfdfdf;
+    padding: 10px;
 `;
 
 function MyPage() {
@@ -38,7 +38,7 @@ function MyPage() {
                     setCoupleId(response.data.coupleId);
                 } catch (error) {
                     console.log(error);
-                    window.alert("데이터 안불러와짐;;");
+                    window.alert('데이터 안불러와짐;;');
                 }
             };
             getUsername();
@@ -51,21 +51,22 @@ function MyPage() {
         } else {
             navigate('/disconnectpartner');
         }
-    }
+    };
 
     const handleLogout = () => {
-        apiClient.post('/auth/sign-out', {})
-            .then(res => {
+        apiClient
+            .post('/auth/sign-out', {})
+            .then((res) => {
                 console.log('Logged out successfully:', res.data);
-                removeCookie("access_token");
+                removeCookie('access_token');
                 removeCookie('refresh_token');
                 removeCookie('username');
                 navigate('/'); // 로그아웃 성공시 메인으로 이동
-                window.alert("로그아웃 되었습니다.");
+                window.alert('로그아웃 되었습니다.');
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Logout failed:', error);
-                alert("로그아웃 실패! 다시 시도해 주세요.");
+                alert('로그아웃 실패! 다시 시도해 주세요.');
             });
     };
 
@@ -77,15 +78,17 @@ function MyPage() {
                 <h3>{username}님</h3>
                 <Menu>
                     <MenuList>
-                        <Link to='/disconnectpartner' style={{ color: 'inherit', textDecoration: 'none' }}>내 정보 관리</Link>
+                        <Link to="/disconnectpartner" style={{ color: 'inherit', textDecoration: 'none' }}>
+                            내 정보 관리
+                        </Link>
                     </MenuList>
                     <MenuList>
-                        <Link to='/changepassword' style={{ color: 'inherit', textDecoration: 'none' }}>비밀번호 재설정</Link>
+                        <Link to="/changepassword" style={{ color: 'inherit', textDecoration: 'none' }}>
+                            비밀번호 재설정
+                        </Link>
                     </MenuList>
                     <MenuList>
                         <div onClick={isCouple}>파트너 관리 페이지</div>
-                    </MenuList>
-                        <Link to='/' style={{color: 'inherit' , textDecoration: 'none'}}>배송지 관리하기</Link>
                     </MenuList>
                 </Menu>
                 <ButtonWrapper>
