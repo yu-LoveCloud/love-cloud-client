@@ -1,13 +1,12 @@
-import React, { useState , useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from "styled-components";
-import axios from "axios";
 import AppContainer from "../../components/AppContainer";
 import NavigationBar from '../../components/Nav/NavigationBar';
 import ContentContainer from '../../components/ContentContainer';
 import PurpleButton from '../../components/button/PurpleButton';
 import { ButtonWrapper } from '../../components/button/ButtonWrapper';
-import { getCookie } from '../../Cookie';
+import { apiClient } from '../../api/apiClient';
 
 const Title = styled.h2`
   color: #000000;
@@ -48,29 +47,12 @@ const Input = styled.input`
   text-align: center;
   position: relative;
   outline: none;
-  
-  &:focus + .underline::after,
-  &:not(:placeholder-shown) + .underline::after {
-    width: ${props => `${props.value.length}ch`};
-  }
-`;
-
-const Underline = styled.div`
-  position: absolute;
-  bottom: 4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0;
-  height: 2px;
-  background-color: black;
-  transition: width 0.3s ease;
 `;
 
 const ConnectCode = () => {
   const [isInputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const inputRef = useRef(null);
-  const accessToken = getCookie("access_token");
   const navigate = useNavigate();
 
   const handleCodeClick = () => {
@@ -92,18 +74,14 @@ const ConnectCode = () => {
 
   const handleConnect = async () => {
     try {
-      const response = await axios.post('http://localhost:8080/couples', {
+      const response = await apiClient.post('/couples', {
         invitationCode: inputValue,
-      }, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`
-        }
       });
       window.alert("커플 등록을 완료했습니다.");
       navigate("/");
     } catch (error) {
-          console.error("커플 등록에 실패했습니다.");
-          window.alert("커플 등록에 실패했습니다.");
+      console.error("커플 등록에 실패했습니다.");
+      window.alert("커플 등록에 실패했습니다.");
     }
   }
 
@@ -122,19 +100,17 @@ const ConnectCode = () => {
                 value={inputValue}
                 onChange={handleChange}
               />
-              <Underline className="underline" />
             </InputWrapper>
           ) : (
             <Code onClick={handleCodeClick}>코드 입력</Code>
           )}
         </CodeContainer>
-            <ButtonWrapper>
-              <PurpleButton onClick={handleConnect}>파트너 연결하기</PurpleButton>
-            </ButtonWrapper>
-        </ContentContainer>
-        </AppContainer>
-    );
-    
+        <ButtonWrapper>
+          <PurpleButton onClick={handleConnect}>파트너 연결하기</PurpleButton>
+        </ButtonWrapper>
+      </ContentContainer>
+    </AppContainer>
+  );
 }
 
 export default ConnectCode;

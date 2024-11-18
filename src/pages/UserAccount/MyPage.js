@@ -7,7 +7,7 @@ import ContentContainer from '../../components/ContentContainer';
 import WhiteButton from '../../components/button/WhiteButton';
 import { Title } from "../../components/Typography";
 import { getCookie, removeCookie } from '../../Cookie';
-import axios from 'axios';
+import { apiClient } from '../../api/apiClient';
 import { ButtonWrapper } from '../../components/button/ButtonWrapper';
 
 const Menu = styled.div`
@@ -19,15 +19,6 @@ const MenuList = styled.div`
   border-bottom: 2px solid #DFDFDF;
   padding: 10px;
 `;
-
-// const Unregister = styled.div`
-//   width: 100%;
-//   position: absolute;
-//   padding-bottom: 20px;
-//   padding-top: 10px;
-//   text-align: center;
-//   color: #757575;
-// `;
 
 function MyPage() {
     const navigate = useNavigate();
@@ -42,12 +33,9 @@ function MyPage() {
         } else {
             const getUsername = async () => {
                 try {
-                    const response = await axios.get('http://localhost:8080/user/me', {
-                        headers: { 'Authorization': `Bearer ${accessToken}` }
-                    });
+                    const response = await apiClient.get('/user/me');
                     setUsername(response.data.name);
                     setCoupleId(response.data.coupleId);
-                    console.log(response.data);
                 } catch (error) {
                     console.log(error);
                     window.alert("데이터 안불러와짐;;");
@@ -58,36 +46,27 @@ function MyPage() {
     }, [navigate]);
 
     const isCouple = () => {
-        // user/me 의 coupleId가지고 커플인지 확인하는걸로 해야하는지 모르겠지만
-        if ( !coupleId ) {
+        if (!coupleId) {
             navigate('/partnerconnect');
         } else {
             navigate('/disconnectpartner');
         }
     }
-    
 
     const handleLogout = () => {
-        const accessToken = getCookie("access_token");
-
-        axios.post('http://localhost:8080/auth/sign-out', {}, {
-            headers: {
-                'Authorization': `Bearer ${accessToken}`
-            }
-        })
-        .then(res => {
-            console.log('Logged out successfully:', res.data);
-            removeCookie("accessToken");
-            removeCookie('refreshToken');
-            removeCookie('username');
-            navigate('/'); // 로그아웃 성공시 메인으로 이동
-            window.alert("로그아웃 되었습니다.");
-
-        })
-        .catch(error => {
-            console.error('Logout failed:', error);
-            alert("로그아웃 실패! 다시 시도해 주세요.");
-        });
+        apiClient.post('/auth/sign-out', {})
+            .then(res => {
+                console.log('Logged out successfully:', res.data);
+                removeCookie("access_token");
+                removeCookie('refresh_token');
+                removeCookie('username');
+                navigate('/'); // 로그아웃 성공시 메인으로 이동
+                window.alert("로그아웃 되었습니다.");
+            })
+            .catch(error => {
+                console.error('Logout failed:', error);
+                alert("로그아웃 실패! 다시 시도해 주세요.");
+            });
     };
 
     return (
@@ -98,26 +77,20 @@ function MyPage() {
                 <h3>{username}님</h3>
                 <Menu>
                     <MenuList>
-                        <Link to='/disconnectpartner' style={{color: 'inherit' , textDecoration: 'none' }}>내 정보 관리</Link>
+                        <Link to='/disconnectpartner' style={{ color: 'inherit', textDecoration: 'none' }}>내 정보 관리</Link>
                     </MenuList>
                     <MenuList>
-                        <Link to='/changepassword' style={{color: 'inherit' , textDecoration: 'none' }}>비밀번호 재설정</Link>
+                        <Link to='/changepassword' style={{ color: 'inherit', textDecoration: 'none' }}>비밀번호 재설정</Link>
                     </MenuList>
                     <MenuList>
                         <div onClick={isCouple}>파트너 관리 페이지</div>
                     </MenuList>
-                    <MenuList>
                         <Link to='/' style={{color: 'inherit' , textDecoration: 'none'}}>배송지 관리하기</Link>
                     </MenuList>
                 </Menu>
                 <ButtonWrapper>
                     <WhiteButton onClick={handleLogout}>로그아웃</WhiteButton>
                 </ButtonWrapper>
-                {/* 회원탈퇴버튼 삭제
-                    <ButtonWrapper>
-                        <Unregister onClick={handleUnregister}>회원탈퇴</Unregister>
-                    </ButtonWrapper>
-                */} 
             </ContentContainer>
         </AppContainer>
     );

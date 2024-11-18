@@ -1,6 +1,5 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import styled from "styled-components";
 import { getCookie } from '../../Cookie';
 import AppContainer from "../../components/AppContainer";
@@ -9,6 +8,7 @@ import ContentContainer from '../../components/ContentContainer';
 import PurpleButton from '../../components/button/PurpleButton';
 import WhiteButton from '../../components/button/WhiteButton';
 import { ButtonWrapper } from '../../components/button/ButtonWrapper';
+import { apiClient } from '../../api/apiClient';
 
 const Title = styled.h2`
   color: #000000;
@@ -35,21 +35,14 @@ const Code = styled.h4`
 `;
 
 function PartnerConnect() {
-    const textCopy = {};
     const [inviteCode, setInviteCode] = useState('');
-    const accessToken = getCookie("access_token");
 
     useEffect(() => {
         const fetchInviteCode = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/user/invitation-code', {
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`
-                    }
-                });
+                const response = await apiClient.get('/user/invitation-code');
                 setInviteCode(response.data);
-            }
-            catch (error) {
+            } catch (error) {
                 console.error('코드를 불러오는데 실패했습니다.', error);
             }
         };
@@ -61,35 +54,34 @@ function PartnerConnect() {
             try {
                 await navigator.clipboard.writeText(inviteCode);
                 alert('초대 코드가 복사되었습니다.');
-            }
-            catch (error) {
+            } catch (error) {
                 console.error('초대 코드 복사 실패', error);
             }
         }
     };
 
-    return(
+    return (
         <AppContainer>
-        <NavigationBar />
-        <ContentContainer>
-            <Title>파트너 연결 후<br /><span style={{ color : '#4c3073' }}>LOVE CLOUD</span>를 시작해보세요.</Title>
-            <Comment>나의 코드 복사</Comment>
-            <Code>
-                <p onClick={handleCopyCode} style={{ cursor : 'pointer' }}>
-                    {inviteCode ? inviteCode : '코드를 불러오는 중...'}
-                </p>
-            </Code>
+            <NavigationBar />
+            <ContentContainer>
+                <Title>파트너 연결 후<br /><span style={{ color: '#4c3073' }}>LOVE CLOUD</span>를 시작해보세요.</Title>
+                <Comment>나의 코드 복사</Comment>
+                <Code>
+                    <p onClick={handleCopyCode} style={{ cursor: 'pointer' }}>
+                        {inviteCode ? inviteCode : '코드를 불러오는 중...'}
+                    </p>
+                </Code>
 
-            <ButtonWrapper>
-            <Link to="/sendinvitation" style = {{ color: 'inherit' , textDecoration : 'none' }}>
-                <PurpleButton>초대장 보내기</PurpleButton>
-            </Link>
-            <p />
-            <Link to="/connectcode" style = {{ color: 'inherit' , textDecoration : 'none' }}>
-                <WhiteButton>상대방 코드로 연결하기</WhiteButton>
-            </Link>
-            </ButtonWrapper>
-        </ContentContainer>
+                <ButtonWrapper>
+                    <Link to="/sendinvitation" style={{ color: 'inherit', textDecoration: 'none' }}>
+                        <PurpleButton>초대장 보내기</PurpleButton>
+                    </Link>
+                    <p />
+                    <Link to="/connectcode" style={{ color: 'inherit', textDecoration: 'none' }}>
+                        <WhiteButton>상대방 코드로 연결하기</WhiteButton>
+                    </Link>
+                </ButtonWrapper>
+            </ContentContainer>
         </AppContainer>
     );
 }
