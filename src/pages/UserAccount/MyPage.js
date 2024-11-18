@@ -77,8 +77,9 @@ function MyPage() {
         })
         .then(res => {
             console.log('Logged out successfully:', res.data);
-            removeCookie("access_token");
-            removeCookie('refresh_token');
+            removeCookie("accessToken");
+            removeCookie('refreshToken');
+            removeCookie('username');
             navigate('/'); // 로그아웃 성공시 메인으로 이동
             window.alert("로그아웃 되었습니다.");
 
@@ -105,9 +106,6 @@ function MyPage() {
                     <MenuList>
                         <div onClick={isCouple}>파트너 관리 페이지</div>
                     </MenuList>
-                    {/* <MenuList>
-                        <Link to='/t' style={{color: 'inherit' , textDecoration: 'none' }}>삭제</Link>
-                    </MenuList> */}
                     <MenuList>
                         <Link to='/' style={{color: 'inherit' , textDecoration: 'none'}}>배송지 관리하기</Link>
                     </MenuList>

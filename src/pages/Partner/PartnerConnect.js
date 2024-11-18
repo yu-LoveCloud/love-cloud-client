@@ -1,6 +1,8 @@
 import React, { useState , useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import styled from "styled-components";
+import { getCookie } from '../../Cookie';
 import AppContainer from "../../components/AppContainer";
 import NavigationBar from '../../components/Nav/NavigationBar';
 import ContentContainer from '../../components/ContentContainer';
@@ -35,16 +37,17 @@ const Code = styled.h4`
 function PartnerConnect() {
     const textCopy = {};
     const [inviteCode, setInviteCode] = useState('');
+    const accessToken = getCookie("access_token");
 
     useEffect(() => {
         const fetchInviteCode = async () => {
             try {
-                const response = await fetch('서버 API');
-                if (!response.ok) {
-                    throw new Error('서버의 응답이 없습니다.');
-                }
-                const data = await response.json();
-                setInviteCode(data.inviteCode);
+                const response = await axios.get('http://localhost:8080/user/invitation-code', {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`
+                    }
+                });
+                setInviteCode(response.data);
             }
             catch (error) {
                 console.error('코드를 불러오는데 실패했습니다.', error);
@@ -73,7 +76,7 @@ function PartnerConnect() {
             <Comment>나의 코드 복사</Comment>
             <Code>
                 <p onClick={handleCopyCode} style={{ cursor : 'pointer' }}>
-                    {inviteCode || '코드를 불러오는 중...'}
+                    {inviteCode ? inviteCode : '코드를 불러오는 중...'}
                 </p>
             </Code>
 
